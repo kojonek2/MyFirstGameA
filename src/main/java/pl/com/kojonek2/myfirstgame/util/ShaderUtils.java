@@ -1,4 +1,4 @@
-package pl.com.kojonek2.myfirstgame.utils;
+package pl.com.kojonek2.myfirstgame.util;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -6,6 +6,12 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 public class ShaderUtils {
 
 	private ShaderUtils() {
+	}
+	
+	public static int load(String vertPath, String fragPath) {
+		String vert = FileUtils.loadAsString(vertPath);
+		String frag = FileUtils.loadAsString(fragPath);
+		return create(vert, frag);
 	}
 	
 	public static int create(String vert, String frag) {

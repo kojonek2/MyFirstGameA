@@ -1,18 +1,25 @@
-package pl.com.kojonek2.myfirstgame.utils;
+package pl.com.kojonek2.myfirstgame.util;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import pl.com.kojonek2.myfirstgame.Main;
+
 public class FileUtils {
 	
 	private FileUtils() {
 	}
 	
-	static String loadAsString(String path) {
+	/**
+	 * 
+	 * @param path path inside resources folder
+	 * @return File content
+	 */
+	public static String loadAsString(String path) {
 		try  {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
+			BufferedReader reader = new BufferedReader(new FileReader(getFile(path)));
 			StringBuilder builder = new StringBuilder();
 			String buffer = "";
 			
@@ -30,4 +37,8 @@ public class FileUtils {
 		}
 	}	
 	
+	public static File getFile(String path) {
+		ClassLoader classLoader = Main.class.getClassLoader();
+		return new File(classLoader.getResource(path).getFile());
+	}
 }
