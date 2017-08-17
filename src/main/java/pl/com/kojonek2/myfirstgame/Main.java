@@ -61,11 +61,11 @@ public class Main implements Runnable {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 		// Create the window
-		window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-		if (window == NULL)
+		this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
+		if (this.window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+		glfwSetKeyCallback(this.window, (window, key, scancode, action, mods) -> {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 		});
@@ -79,15 +79,15 @@ public class Main implements Runnable {
 
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-			glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
+			glfwSetWindowPos(this.window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		}
 
 		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(this.window);
 		// Disable v-sync
 		glfwSwapInterval(0);
 		// Make the window visible
-		glfwShowWindow(window);
+		glfwShowWindow(this.window);
 	}
 
 	public void loop() {
