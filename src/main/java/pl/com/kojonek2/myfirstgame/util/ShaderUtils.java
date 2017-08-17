@@ -40,4 +40,10 @@ public class ShaderUtils {
 		return program;
 	}
 	
+	public static int bindAtributes(int program, int index, String name) {
+		glBindAttribLocation(program, 0, name);
+		glLinkProgram(program);
+		glValidateProgram(program);
+		return program;
+	}
 }

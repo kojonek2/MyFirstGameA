@@ -93,7 +93,7 @@ public class Main implements Runnable {
 	public void loop() {
 		GL.createCapabilities();
 
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		long timer = System.currentTimeMillis();
 		int updates = 0;
@@ -109,23 +109,33 @@ public class Main implements Runnable {
 				-0.5f, 0.5f, 0f,
 				-0.5f, -0.5f, 0f,
 				0.5f, -0.5f, 0f,
-				
-				0.5f, -0.5f, 0f,
 				0.5f, 0.5f, 0f,
-				-0.5f, 0.5f, 0f
+				0f, 1f, 0f
 		};
-		FloatBuffer verticesBuff = (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length);
-		verticesBuff.put(vertices);
-		verticesBuff.flip();
+		FloatBuffer verticesBuff = (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip();
+		
+		int[] indices = new int[] {
+				0, 1, 3,
+				3, 1, 2,
+				4, 0, 3
+		};
+		IntBuffer indicesBuff = (IntBuffer) BufferUtils.createIntBuffer(indices.length).put(indices).flip();
+		
+		int shader = ShaderUtils.load("shaders/shader.vert", "shaders/shader.frag");
+		ShaderUtils.bindAtributes(shader, 0, "position");
 		
 		int vaoID = glGenVertexArrays();
 		glBindVertexArray(vaoID);
 		
-		int vboID = glGenBuffers();
-		glBindBuffer(GL_VERTEX_ARRAY, vboID);
-		glBufferData(GL_VERTEX_ARRAY, verticesBuff, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_VERTEX_ARRAY, 0);
+		int vbo1ID = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vbo1ID);
+		glBufferData(GL_ARRAY_BUFFER, verticesBuff, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, true, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		int vbo2ID = glGenBuffers();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo2ID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuff, GL_STATIC_DRAW);
 		
 		glBindVertexArray(0);
 		
@@ -143,7 +153,7 @@ public class Main implements Runnable {
 				delta--;
 			}
 			frames++;		
-			this.render(vaoID, vertices.length/3);
+			this.render(shader, vaoID, indices.length);
 
 			//frame counter in title
 			if(System.currentTimeMillis() - timer > 1000) {
@@ -159,14 +169,16 @@ public class Main implements Runnable {
 		}
 	}
 	
-	public void render(int vao, int count) {
+	public void render(int shader, int vao, int count) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+		glUseProgram(shader);
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
-		glDrawArrays(GL_TRIANGLES, 0, count);
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
+		glUseProgram(0);
 	}
 	
 	public void update(double deltaTime) {
