@@ -3,24 +3,18 @@ package pl.com.kojonek2.myfirstgame;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import pl.com.kojonek2.myfirstgame.util.ShaderUtils;
+import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 
 public class Main implements Runnable {
 
@@ -30,6 +24,12 @@ public class Main implements Runnable {
 
 	private Thread renderingThread;
 	private long window;
+	
+	private float[] vertices;
+	private int[] indices;
+	
+	private ShaderProgram shader;
+	private VaoLoader loader;
 
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -41,7 +41,7 @@ public class Main implements Runnable {
 
 		this.init();
 		this.loop();
-
+		this.cleanUp();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(this.window);
 		glfwDestroyWindow(this.window);
@@ -107,39 +107,7 @@ public class Main implements Runnable {
 		double rate = 1_000_000_000 / 60.0;
 		double delta = 0.0;
 		
-		float[] vertices = new float[] {
-				-0.5f, 0.5f, 0f,
-				-0.5f, -0.5f, 0f,
-				0.5f, -0.5f, 0f,
-				0.5f, 0.5f, 0f,
-				0f, 1f, 0f
-		};
-		FloatBuffer verticesBuff = (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip();
-		
-		int[] indices = new int[] {
-				0, 1, 3,
-				3, 1, 2,
-				4, 0, 3
-		};
-		IntBuffer indicesBuff = (IntBuffer) BufferUtils.createIntBuffer(indices.length).put(indices).flip();
-		
-		int shader = ShaderUtils.load("shaders/shader.vert", "shaders/shader.frag");
-		ShaderUtils.bindAtributes(shader, 0, "position");
-		
-		int vaoID = glGenVertexArrays();
-		glBindVertexArray(vaoID);
-		
-		int vbo1ID = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vbo1ID);
-		glBufferData(GL_ARRAY_BUFFER, verticesBuff, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, true, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		int vbo2ID = glGenBuffers();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo2ID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuff, GL_STATIC_DRAW);
-		
-		glBindVertexArray(0);
+		this.glInit();
 		
 		while (!glfwWindowShouldClose(this.window)) {
 			
@@ -154,8 +122,9 @@ public class Main implements Runnable {
 				updates++;
 				delta--;
 			}
+			
 			frames++;		
-			this.render(shader, vaoID, indices.length);
+			this.render();
 
 			//frame counter in title
 			if(System.currentTimeMillis() - timer > 1000) {
@@ -171,24 +140,42 @@ public class Main implements Runnable {
 		}
 	}
 	
-	public void render(int shader, int vao, int count) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	public void glInit() {
+		this.vertices = new float[] {
+				-0.5f, 0.5f, 0f,  //0
+				-0.5f, -0.5f, 0f, //1
+				0.5f, -0.5f, 0f,  //2
+				0.5f, 0.5f, 0f,   //3
+		};
+		this.indices = new int[] {
+				0, 1, 3,
+				3, 1, 2,
+		};
 		
-		glUseProgram(shader);
-		glBindVertexArray(vao);
+		this.shader = ShaderProgram.STANDARD;
+		this.loader = new VaoLoader(this.vertices, this.indices);
+	}
+	
+	public void render() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		this.shader.start();
+		this.loader.bindVao();
 		glEnableVertexAttribArray(0);
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, this.indices.length, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
-		glUseProgram(0);
+		this.loader.unBindVao();
+		this.shader.stop();
 	}
 	
 	public void update(double deltaTime) {
-		
 	}
 
+	public void cleanUp() {
+		shader.cleanUp();
+	}
+	
 	public static void main(String[] args) {
 		new Main().start();
 	}
-
+	
 }
