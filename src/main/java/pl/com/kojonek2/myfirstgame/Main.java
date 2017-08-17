@@ -171,6 +171,7 @@ public class Main implements Runnable {
 	}
 
 	public void cleanUp() {
+		loader.cleanUp();
 		shader.cleanUp();
 	}
 	
