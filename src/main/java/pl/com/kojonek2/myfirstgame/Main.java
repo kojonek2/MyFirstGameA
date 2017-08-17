@@ -105,28 +105,31 @@ public class Main implements Runnable {
 		double rate = 1_000_000_000 / 60.0;
 		double delta = 0.0;
 		
-		int vao = glGenVertexArrays();
-		glBindVertexArray(vao);
-
 		float[] vertices = new float[] {
-			-1f, -1f, 0f,
-			1f, -1f, 0f,
-			0f, 1f, 0f
+				-0.5f, 0.5f, 0f,
+				-0.5f, -0.5f, 0f,
+				0.5f, -0.5f, 0f,
+				
+				0.5f, -0.5f, 0f,
+				0.5f, 0.5f, 0f,
+				-0.5f, 0.5f, 0f
 		};
-		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip();
+		FloatBuffer verticesBuff = (FloatBuffer) BufferUtils.createFloatBuffer(vertices.length);
+		verticesBuff.put(vertices);
+		verticesBuff.flip();
 		
-		int vbo = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+		int vaoID = glGenVertexArrays();
+		glBindVertexArray(vaoID);
+		
+		int vboID = glGenBuffers();
+		glBindBuffer(GL_VERTEX_ARRAY, vboID);
+		glBufferData(GL_VERTEX_ARRAY, verticesBuff, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_VERTEX_ARRAY, 0);
+		
 		glBindVertexArray(0);
 		
-		int shader = ShaderUtils.load("shaders/shader.vert", "shaders/shader.frag");
-		glUseProgram(shader);
-		
-		
-		while (!glfwWindowShouldClose(window)) {
+		while (!glfwWindowShouldClose(this.window)) {
 			
 			currentTime = System.nanoTime();
 			deltaTime = currentTime - lastTime;
@@ -140,7 +143,7 @@ public class Main implements Runnable {
 				delta--;
 			}
 			frames++;		
-			this.render();
+			this.render(vaoID, vertices.length/3);
 
 			//frame counter in title
 			if(System.currentTimeMillis() - timer > 1000) {
@@ -150,15 +153,20 @@ public class Main implements Runnable {
 				timer += 1000;
 			}
 			
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(this.window);
 
 			glfwPollEvents();
 		}
 	}
 	
-	public void render() {
+	public void render(int vao, int count) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		
+		glBindVertexArray(vao);
+		glEnableVertexAttribArray(0);
+		glDrawArrays(GL_TRIANGLES, 0, count);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 	}
 	
 	public void update(double deltaTime) {
