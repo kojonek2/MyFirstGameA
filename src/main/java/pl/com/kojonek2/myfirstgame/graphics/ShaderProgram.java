@@ -7,7 +7,7 @@ import pl.com.kojonek2.myfirstgame.util.FileUtils;
 
 public class ShaderProgram {
 
-	public static ShaderProgram STANDARD = new ShaderProgram("shaders/shader.vert", "shaders/shader.frag").bindAttribute(0, "position");
+	public static ShaderProgram STANDARD = new ShaderProgram("shaders/shader.vert", "shaders/shader.frag").bindAttribute(0, "position").bindAttribute(1, "texture_cord");
 	
 	private int programID;
 	private int vertexID;
@@ -21,7 +21,7 @@ public class ShaderProgram {
 	}
 	
 	private ShaderProgram bindAttribute(int attribute, String name) {
-		glBindAttribLocation(programID, 0, name);
+		glBindAttribLocation(programID, attribute, name);
 		glLinkProgram(programID);
 		glValidateProgram(programID);
 		return this;

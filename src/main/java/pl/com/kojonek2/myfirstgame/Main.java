@@ -3,6 +3,7 @@ package pl.com.kojonek2.myfirstgame;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -15,6 +16,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
+import pl.com.kojonek2.myfirstgame.graphics.Texture;
 
 public class Main implements Runnable {
 
@@ -27,9 +29,11 @@ public class Main implements Runnable {
 	
 	private float[] vertices;
 	private int[] indices;
+	private float[] textureCords;
 	
 	private ShaderProgram shader;
 	private VaoLoader loader;
+	private Texture texture;
 
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -151,9 +155,15 @@ public class Main implements Runnable {
 				0, 1, 3,
 				3, 1, 2,
 		};
-		
+		this.textureCords = new float[] {
+				0f, 0f,
+				0f, 1f,
+				1f, 1f,
+				1f, 0f
+		};
 		this.shader = ShaderProgram.STANDARD;
-		this.loader = new VaoLoader(this.vertices, this.indices);
+		this.loader = new VaoLoader(this.vertices, this.indices, this.textureCords);
+		this.texture = new Texture("textures/test.png");
 	}
 	
 	public void render() {
@@ -161,8 +171,13 @@ public class Main implements Runnable {
 		this.shader.start();
 		this.loader.bindVao();
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this.texture.getID());
 		glDrawElements(GL_TRIANGLES, this.indices.length, GL_UNSIGNED_INT, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 		this.loader.unBindVao();
 		this.shader.stop();
 	}
