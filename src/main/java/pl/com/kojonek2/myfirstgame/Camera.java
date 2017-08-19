@@ -19,7 +19,7 @@ public class Camera {
 		Matrix4f matrix = new Matrix4f().rotation((float) Math.toRadians(-this.xRotation), new Vector3f(1f, 0f, 0f));
 		matrix.rotate((float) Math.toRadians(-this.yRotation), new Vector3f(0f, 1f, 0f));
 		matrix.rotate((float) Math.toRadians(-this.zRotation), new Vector3f(0f, 0f, 1f));
-		matrix.translate(position.negate());
+		matrix.translate(new Vector3f(-this.position.x, -this.position.y, -this.position.z));
 		return matrix;
 	}
 	

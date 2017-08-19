@@ -172,7 +172,8 @@ public class Main implements Runnable {
 		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;
 		this.shader.loadProjectionMatrix(MatrixUtils.getProjectionMatrix());
-		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, 0f), 0f, 0f, 0f, 1));
+		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, -1f), 0f, 0f, 0f, 1f));
+		this.shader.loadViewMatrix(this.camera);
 		this.texture = new Texture("textures/test.png");
 		this.object = new VaoModel(this.vertices, this.indices, this.textureCords, this.texture, this.shader);
 	}
@@ -182,7 +183,6 @@ public class Main implements Runnable {
 		
 		this.object.render();
 	}
-	
 	public void update(double deltaTime) {
 		this.camera.update();
 		this.shader.loadViewMatrix(this.camera);

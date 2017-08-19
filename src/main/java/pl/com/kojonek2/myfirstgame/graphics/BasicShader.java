@@ -29,21 +29,27 @@ public class BasicShader extends ShaderProgram {
 	}
 
 	public void loadTransformationMatrix(Matrix4f matrix) {
+		this.start();
 		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
 		matrix.get(buffer);
 		glUniformMatrix4fv(this.transformationMatrixLocation, false, buffer);
+		this.stop();
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
+		this.start();
 		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
 		matrix.get(buffer);
 		glUniformMatrix4fv(this.projectionMatrixLocation, false, buffer);
+		this.stop();
 	}
 	
 	public void loadViewMatrix(Camera camera) {
+		this.start();
 		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
 		Matrix4f matrix = camera.getViewMatrix();
 		matrix.get(buffer);
 		glUniformMatrix4fv(this.viewMatrixLocation, false, buffer);
+		this.stop();
 	}
 }
