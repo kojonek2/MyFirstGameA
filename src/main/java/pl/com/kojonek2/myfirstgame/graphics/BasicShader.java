@@ -7,13 +7,19 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
+import pl.com.kojonek2.myfirstgame.Camera;
+
 public class BasicShader extends ShaderProgram {
 	
 	private int transformationMatrixLocation;
+	private int projectionMatrixLocation;
+	private int viewMatrixLocation;
 
 	public BasicShader() {
 		super("shaders/shader.vert", "shaders/shader.frag");
-		this.transformationMatrixLocation = this.getUnfiormLocation("transformationMatrix");
+		this.transformationMatrixLocation = this.getUnfiormLocation("transformation_matrix");
+		this.projectionMatrixLocation = this.getUnfiormLocation("projection_matrix");
+		this.viewMatrixLocation = this.getUnfiormLocation("view_matrix");
 	}
 
 	@Override
@@ -26,5 +32,18 @@ public class BasicShader extends ShaderProgram {
 		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
 		matrix.get(buffer);
 		glUniformMatrix4fv(this.transformationMatrixLocation, false, buffer);
+	}
+	
+	public void loadProjectionMatrix(Matrix4f matrix) {
+		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
+		matrix.get(buffer);
+		glUniformMatrix4fv(this.projectionMatrixLocation, false, buffer);
+	}
+	
+	public void loadViewMatrix(Camera camera) {
+		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
+		Matrix4f matrix = camera.getViewMatrix();
+		matrix.get(buffer);
+		glUniformMatrix4fv(this.viewMatrixLocation, false, buffer);
 	}
 }

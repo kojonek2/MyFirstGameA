@@ -7,7 +7,7 @@ import pl.com.kojonek2.myfirstgame.util.FileUtils;
 
 public abstract class ShaderProgram {
 
-	public static ShaderProgram STANDARD = new BasicShader();
+	public static BasicShader STANDARD = new BasicShader();
 	
 	protected int programID;
 	protected int vertexID;
@@ -46,7 +46,9 @@ public abstract class ShaderProgram {
 		
 		glAttachShader(this.programID, this.vertexID);
 		glAttachShader(this.programID, this.fragmentID);
+		
 		this.bindAttributes();
+		
 		glLinkProgram(this.programID);
 		glValidateProgram(this.programID);
 	}

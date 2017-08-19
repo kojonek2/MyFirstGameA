@@ -8,19 +8,26 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.IntBuffer;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import pl.com.kojonek2.myfirstgame.graphics.BasicShader;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 import pl.com.kojonek2.myfirstgame.graphics.Texture;
+import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
+import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 
 public class Main implements Runnable {
 
-	private int height = 720;
-	private int width = 1280;
+	public static int height = 720;
+	public static int width = 1280;
 	private String title = "My first game";
+	
+	private GLFWKeyCallback keyHandler;
 
 	private Thread renderingThread;
 	private long window;
@@ -29,9 +36,10 @@ public class Main implements Runnable {
 	private int[] indices;
 	private float[] textureCords;
 	
-	private ShaderProgram shader;
+	private BasicShader shader;
 	private VaoModel object;
 	private Texture texture;
+	private Camera camera;
 
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -65,14 +73,16 @@ public class Main implements Runnable {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 		// Create the window
-		this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
+		this.window = glfwCreateWindow(Main.width, Main.height, this.title, NULL, NULL);
 		if (this.window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
-
+		
 		glfwSetKeyCallback(this.window, (window, key, scancode, action, mods) -> {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 		});
+		this.keyHandler = new KeyboardHandler();
+		glfwSetKeyCallback(this.window, this.keyHandler);
 
 		// Get the thread stack and push a new frame
 		try (MemoryStack stack = stackPush()) {
@@ -159,7 +169,10 @@ public class Main implements Runnable {
 				1f, 1f,
 				1f, 0f
 		};
+		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;
+		this.shader.loadProjectionMatrix(MatrixUtils.getProjectionMatrix());
+		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, 0f), 0f, 0f, 0f, 1));
 		this.texture = new Texture("textures/test.png");
 		this.object = new VaoModel(this.vertices, this.indices, this.textureCords, this.texture, this.shader);
 	}
@@ -171,6 +184,8 @@ public class Main implements Runnable {
 	}
 	
 	public void update(double deltaTime) {
+		this.camera.update();
+		this.shader.loadViewMatrix(this.camera);
 	}
 
 	public void cleanUp() {
