@@ -5,35 +5,27 @@ import static org.lwjgl.opengl.GL20.*;
 
 import pl.com.kojonek2.myfirstgame.util.FileUtils;
 
-public class ShaderProgram {
+public abstract class ShaderProgram {
 
-	public static ShaderProgram STANDARD = new ShaderProgram("shaders/shader.vert", "shaders/shader.frag").bindAttribute(0, "position").bindAttribute(1, "texture_cord");
+	public static ShaderProgram STANDARD = new BasicShader();
 	
-	private int programID;
-	private int vertexID;
-	private int fragmentID;
+	protected int programID;
+	protected int vertexID;
+	protected int fragmentID;
 	
-	private ShaderProgram() {
-	}
-	
-	private ShaderProgram(String vertPath, String fragPath) {
+	protected ShaderProgram(String vertPath, String fragPath) {
 		this.load(vertPath, fragPath);
 	}
 	
-	private ShaderProgram bindAttribute(int attribute, String name) {
-		glBindAttribLocation(programID, attribute, name);
-		glLinkProgram(programID);
-		glValidateProgram(programID);
-		return this;
-	}
+	protected abstract void bindAttributes();
 	
-	private void load(String vertPath, String fragPath) {
+	protected void load(String vertPath, String fragPath) {
 		String vert = FileUtils.loadAsString(vertPath);
 		String frag = FileUtils.loadAsString(fragPath);
 		this.create(vert, frag);
 	}
 	
-	private void create(String vert, String frag) {
+	protected void create(String vert, String frag) {
 		this.programID = glCreateProgram();
 		this.vertexID = glCreateShader(GL_VERTEX_SHADER);
 		this.fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -54,8 +46,13 @@ public class ShaderProgram {
 		
 		glAttachShader(this.programID, this.vertexID);
 		glAttachShader(this.programID, this.fragmentID);
+		this.bindAttributes();
 		glLinkProgram(this.programID);
 		glValidateProgram(this.programID);
+	}
+	
+	protected int getUnfiormLocation(String name) {
+		return glGetUniformLocation(this.programID, name);
 	}
 	
 	public void start() {

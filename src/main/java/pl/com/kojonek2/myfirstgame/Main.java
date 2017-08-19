@@ -3,8 +3,6 @@ package pl.com.kojonek2.myfirstgame;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -32,7 +30,7 @@ public class Main implements Runnable {
 	private float[] textureCords;
 	
 	private ShaderProgram shader;
-	private VaoLoader loader;
+	private VaoModel object;
 	private Texture texture;
 
 	public void start() {
@@ -162,31 +160,21 @@ public class Main implements Runnable {
 				1f, 0f
 		};
 		this.shader = ShaderProgram.STANDARD;
-		this.loader = new VaoLoader(this.vertices, this.indices, this.textureCords);
 		this.texture = new Texture("textures/test.png");
+		this.object = new VaoModel(this.vertices, this.indices, this.textureCords, this.texture, this.shader);
 	}
 	
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		this.shader.start();
-		this.loader.bindVao();
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this.texture.getID());
-		glDrawElements(GL_TRIANGLES, this.indices.length, GL_UNSIGNED_INT, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		this.loader.unBindVao();
-		this.shader.stop();
+		
+		this.object.render();
 	}
 	
 	public void update(double deltaTime) {
 	}
 
 	public void cleanUp() {
-		loader.cleanUp();
+		object.cleanUp();
 		shader.cleanUp();
 	}
 	

@@ -1,6 +1,7 @@
 package pl.com.kojonek2.myfirstgame;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -12,12 +13,20 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-public class VaoLoader {
+import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
+import pl.com.kojonek2.myfirstgame.graphics.Texture;
+
+public class VaoModel {
 	
 	private int vaoID;
 	private List<Integer> vbos = new ArrayList<>();
+	private int numberOfIndices;
+	private Texture texture;
+	private ShaderProgram shader;
 	
-	public VaoLoader(float[] vertices, int[] indices, float[] textureCords) {
+	public VaoModel(float[] vertices, int[] indices, float[] textureCords, Texture texture, ShaderProgram shader) {
+		this.texture = texture;
+		this.shader = shader;
 		this.generateVao();
 		this.loadVertices(vertices);
 		this.loadIndices(indices);
@@ -41,6 +50,7 @@ public class VaoLoader {
 	}
 	
 	private void loadIndices(int[] indices) {
+		this.numberOfIndices = indices.length;
 		int vbo = glGenBuffers();
 		this.vbos.add(vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
@@ -58,12 +68,35 @@ public class VaoLoader {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	
+	public void render() {
+		this.shader.start();
+		this.bindVao();
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this.texture.getID());
+		glDrawElements(GL_TRIANGLES, this.numberOfIndices, GL_UNSIGNED_INT, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		this.unBindVao();
+		this.shader.stop();
+	}
+
 	public void bindVao() {
 		glBindVertexArray(this.vaoID);
 	}
 	
 	public void unBindVao() {
 		glBindVertexArray(this.vaoID);
+	}
+	
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+
+	public void setShader(ShaderProgram shader) {
+		this.shader = shader;
 	}
 	
 	public void cleanUp() {

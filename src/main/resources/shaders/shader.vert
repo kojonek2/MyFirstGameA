@@ -5,7 +5,7 @@ in vec2 texture_cord;
 
 out vec2 pass_texture_cord;
 
-out vec3 color;
+uniform mat4 transformationMatrix;
 
 void main() {
 	gl_Position = vec4(position, 1);
