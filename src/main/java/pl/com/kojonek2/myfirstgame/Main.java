@@ -77,11 +77,8 @@ public class Main implements Runnable {
 		if (this.window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		
-		glfwSetKeyCallback(this.window, (window, key, scancode, action, mods) -> {
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-				glfwSetWindowShouldClose(window, true);
-		});
 		this.keyHandler = new KeyboardHandler();
+		KeyboardHandler.window = this.window;
 		glfwSetKeyCallback(this.window, this.keyHandler);
 
 		// Get the thread stack and push a new frame
@@ -154,10 +151,10 @@ public class Main implements Runnable {
 	
 	public void glInit() {
 		this.vertices = new float[] {
-				-0.5f, 0.5f, 0f,  //0
-				-0.5f, -0.5f, 0f, //1
-				0.5f, -0.5f, 0f,  //2
-				0.5f, 0.5f, 0f,   //3
+				-1f, 1f, 1f,  //0
+				-1f, -1f, 1f, //1
+				1f, -1f, 1f,  //2
+				1f, 1f, 1f,   //3
 		};
 		this.indices = new int[] {
 				0, 1, 3,
@@ -167,7 +164,7 @@ public class Main implements Runnable {
 				0f, 0f,
 				0f, 1f,
 				1f, 1f,
-				1f, 0f
+				1f, 0f,
 		};
 		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;

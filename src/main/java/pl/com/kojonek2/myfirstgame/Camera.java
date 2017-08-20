@@ -24,8 +24,44 @@ public class Camera {
 	}
 	
 	public void update() {
+		System.out.println(this.yRotation);
+		Vector3f forward = new Vector3f(0f, 0f, -0.2f);
+		forward.rotateX((float) Math.toRadians(this.xRotation));
+		forward.rotateY((float) Math.toRadians(this.yRotation));
+		forward.rotateZ((float) Math.toRadians(this.zRotation));
+		Vector3f right = new Vector3f(0.2f, 0f, 0f);
+		right.rotateX((float) Math.toRadians(this.xRotation));
+		right.rotateY((float) Math.toRadians(this.yRotation));
+		right.rotateZ((float) Math.toRadians(this.zRotation));
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_W)) {
-			this.position.add(0f, 0f, 0.2f);
+			this.position.add(forward);
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_S)) {
+			this.position.add(new Vector3f(forward).negate());
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_A)) {
+			this.position.add(new Vector3f(right).negate());
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_D)) {
+			this.position.add(right);
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_UP)) {
+			this.xRotation += 1f;
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_DOWN)) {
+			this.xRotation += -1f;
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT)) {
+			this.yRotation += 1f;
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT)) {
+			this.yRotation += -1f;
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_Q)) {
+			this.zRotation += 1f;
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_E)) {
+			this.zRotation += -1f;
 		}
 	}
 	
