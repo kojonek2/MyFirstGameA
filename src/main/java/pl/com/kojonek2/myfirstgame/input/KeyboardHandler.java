@@ -14,7 +14,6 @@ public class KeyboardHandler extends GLFWKeyCallback {
 		keys[key] = action != GLFW_RELEASE;
 		if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 			glfwSetWindowShouldClose(window, true);
-			System.out.println("test");
 		}
 	}
 

@@ -77,10 +77,6 @@ public class Main implements Runnable {
 		if (this.window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		
-		this.keyHandler = new KeyboardHandler();
-		KeyboardHandler.window = this.window;
-		glfwSetKeyCallback(this.window, this.keyHandler);
-
 		// Get the thread stack and push a new frame
 		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1);
@@ -93,12 +89,18 @@ public class Main implements Runnable {
 			glfwSetWindowPos(this.window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		}
 
-		// Make the OpenGL context current
 		glfwMakeContextCurrent(this.window);
 		// Disable v-sync
 		glfwSwapInterval(0);
-		// Make the window visible
 		glfwShowWindow(this.window);
+		
+		//Callback////////////////////
+		glfwSetFramebufferSizeCallback(this.window, (long windowID, int width, int height) ->  glViewport(0, 0, width, height));
+		
+		this.keyHandler = new KeyboardHandler();
+		KeyboardHandler.window = this.window;
+		glfwSetKeyCallback(this.window, this.keyHandler);
+		/////////////////////////////
 	}
 
 	public void loop() {
