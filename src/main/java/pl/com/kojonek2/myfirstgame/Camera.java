@@ -9,7 +9,7 @@ import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 
 
 public class Camera {
-	private Vector3f position = new Vector3f(0f, 0f, 0f);
+	private Vector3f position = new Vector3f(0f, 0.5f, 1f);
 	private float xRotation = 0, yRotation = 0;
 	
 	public Camera() {
@@ -94,7 +94,7 @@ public class Camera {
 		this.yRotation = yRotation;
 	}
 	
-	public void clampXRotation() {
+	private void clampXRotation() {
 		if(this.xRotation > 360f) {
 			this.xRotation -= 360f;
 		} else if (this.xRotation < 0f) {
@@ -102,7 +102,7 @@ public class Camera {
 		}
 	}
 	
-	public void clampYRotation() {
+	private void clampYRotation() {
 		if(this.yRotation > 360f) {
 			this.yRotation -= 360f;
 		} else if (this.yRotation < 0f) {

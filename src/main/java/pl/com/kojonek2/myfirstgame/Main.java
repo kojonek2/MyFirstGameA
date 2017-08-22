@@ -105,8 +105,6 @@ public class Main implements Runnable {
 
 	public void loop() {
 		GL.createCapabilities();
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		long timer = System.currentTimeMillis();
 		int updates = 0;
@@ -152,21 +150,44 @@ public class Main implements Runnable {
 	}
 	
 	public void glInit() {
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		
 		this.vertices = new float[] {
 				-0.5f, 1f, 0.5f,  //0
 				-0.5f, 0f, 0.5f, //1
 				0.5f, 0f, 0.5f,  //2
 				0.5f, 1f, 0.5f,   //3
+				-0.5f, 1f, -0.5f,  //4
+				-0.5f, 0f, -0.5f, //5
+				0.5f, 0f, -0.5f,  //6
+				0.5f, 1f, -0.5f,   //7
 		};
 		this.indices = new int[] {
 				0, 1, 3,
 				3, 1, 2,
+				0, 4, 1,
+				4, 5, 1,
+				3, 6, 7,
+				3, 2, 6,
+				4, 7, 5,
+				7, 6, 5,
+				0, 7, 4,
+				0, 3, 7,
+				1, 5, 6,
+				1, 6, 2
 		};
 		this.textureCords = new float[] {
 				0f, 0f,
 				0f, 1f,
 				1f, 1f,
 				1f, 0f,
+				0.2f, 0.2f,
+				0.2f, 0.2f,
+				0.2f, 0.2f,
+				0.2f, 0.2f
 		};
 		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;
@@ -184,6 +205,11 @@ public class Main implements Runnable {
 	}
 	public void update(double deltaTime) {
 		this.camera.update();
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_BACKSPACE)) {
+			this.camera.setPosition(new Vector3f(0f, 2.8f, 0f));
+			this.camera.setXRotation(0f);
+			this.camera.setYRotation(0f);
+		}
 		this.shader.loadViewMatrix(this.camera);
 	}
 
