@@ -14,23 +14,23 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
-import pl.com.kojonek2.myfirstgame.graphics.Texture2D;
+import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 
 public class VaoModel {
 	
 	private int vaoID;
 	private List<Integer> vbos = new ArrayList<>();
 	private int numberOfIndices;
-	private Texture2D texture;
+	private TextureCubeMap texture;
 	private ShaderProgram shader;
 	
-	public VaoModel(float[] vertices, int[] indices, float[] textureCords, Texture2D texture, ShaderProgram shader) {
+	public VaoModel(float[] vertices, int[] indices, float[] textureCords, TextureCubeMap texture, ShaderProgram shader) {
 		this.texture = texture;
 		this.shader = shader;
 		this.generateVao();
 		this.loadVertices(vertices);
 		this.loadIndices(indices);
-		this.loadTextureCords(textureCords);
+		//this.loadTextureCords(textureCords);
 		this.unBindVao();
 	}
 	
@@ -72,13 +72,11 @@ public class VaoModel {
 		this.shader.start();
 		this.bindVao();
 		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this.texture.getID());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, this.texture.getID());
 		glDrawElements(GL_TRIANGLES, this.numberOfIndices, GL_UNSIGNED_INT, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
 		this.unBindVao();
 		this.shader.stop();
 	}
@@ -91,7 +89,7 @@ public class VaoModel {
 		glBindVertexArray(this.vaoID);
 	}
 	
-	public void setTexture(Texture2D texture) {
+	public void setTexture(TextureCubeMap texture) {
 		this.texture = texture;
 	}
 

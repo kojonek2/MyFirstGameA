@@ -25,7 +25,6 @@ public class BasicShader extends ShaderProgram {
 	@Override
 	protected void bindAttributes() {
 		glBindAttribLocation(this.programID, 0, "position");
-		glBindAttribLocation(this.programID, 1, "texture_cord");
 	}
 
 	public void loadTransformationMatrix(Matrix4f matrix) {

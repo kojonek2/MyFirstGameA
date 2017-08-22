@@ -1,11 +1,11 @@
 #version 420 core
 
-in vec2 pass_texture_cord;
+in vec3 textureCords;
 
-uniform sampler2D textureSampler;
+uniform samplerCube textureSampler;
 
 out vec4 out_color;
 
 void main() {
-		out_color = texture(textureSampler, pass_texture_cord);
+		out_color = texture(textureSampler, textureCords);
 }
