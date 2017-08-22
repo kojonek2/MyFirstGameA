@@ -21,16 +21,13 @@ public class VaoModel {
 	private int vaoID;
 	private List<Integer> vbos = new ArrayList<>();
 	private int numberOfIndices;
-	private TextureCubeMap texture;
 	private ShaderProgram shader;
 	
-	public VaoModel(float[] vertices, int[] indices, float[] textureCords, TextureCubeMap texture, ShaderProgram shader) {
-		this.texture = texture;
+	public VaoModel(float[] vertices, int[] indices, ShaderProgram shader) {
 		this.shader = shader;
 		this.generateVao();
 		this.loadVertices(vertices);
 		this.loadIndices(indices);
-		//this.loadTextureCords(textureCords);
 		this.unBindVao();
 	}
 	
@@ -58,6 +55,7 @@ public class VaoModel {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
 	}
 	
+	@SuppressWarnings("unused")
 	private void loadTextureCords(float[] textureCords) {
 		int vbo = glGenBuffers();
 		this.vbos.add(vbo);
@@ -68,19 +66,6 @@ public class VaoModel {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	
-	public void render() {
-		this.shader.start();
-		this.bindVao();
-		glEnableVertexAttribArray(0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, this.texture.getID());
-		glDrawElements(GL_TRIANGLES, this.numberOfIndices, GL_UNSIGNED_INT, 0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		glDisableVertexAttribArray(0);
-		this.unBindVao();
-		this.shader.stop();
-	}
-
 	public void bindVao() {
 		glBindVertexArray(this.vaoID);
 	}
@@ -89,12 +74,12 @@ public class VaoModel {
 		glBindVertexArray(this.vaoID);
 	}
 	
-	public void setTexture(TextureCubeMap texture) {
-		this.texture = texture;
-	}
-
 	public void setShader(ShaderProgram shader) {
 		this.shader = shader;
+	}
+	
+	public int getNumberOfIndices() {
+		return this.numberOfIndices;
 	}
 	
 	public void cleanUp() {

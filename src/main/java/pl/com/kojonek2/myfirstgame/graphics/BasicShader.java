@@ -8,6 +8,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import pl.com.kojonek2.myfirstgame.Camera;
+import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 
 public class BasicShader extends ShaderProgram {
 	
@@ -20,6 +21,7 @@ public class BasicShader extends ShaderProgram {
 		this.transformationMatrixLocation = this.getUnfiormLocation("transformation_matrix");
 		this.projectionMatrixLocation = this.getUnfiormLocation("projection_matrix");
 		this.viewMatrixLocation = this.getUnfiormLocation("view_matrix");
+		this.loadProjectionMatrix(MatrixUtils.getProjectionMatrix());
 	}
 
 	@Override
@@ -27,12 +29,11 @@ public class BasicShader extends ShaderProgram {
 		glBindAttribLocation(this.programID, 0, "position");
 	}
 
+	//** IMPORTANT ENABLE SHADER BEFORE USING IT */
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		this.start();
 		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
 		matrix.get(buffer);
 		glUniformMatrix4fv(this.transformationMatrixLocation, false, buffer);
-		this.stop();
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {

@@ -15,11 +15,12 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import pl.com.kojonek2.myfirstgame.blocks.Block;
 import pl.com.kojonek2.myfirstgame.graphics.BasicShader;
+import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
-import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 
 public class Main implements Runnable {
 
@@ -34,12 +35,11 @@ public class Main implements Runnable {
 	
 	private float[] vertices;
 	private int[] indices;
-	private float[] textureCords;
 	
 	private BasicShader shader;
-	private VaoModel object;
-	private TextureCubeMap texture;
 	private Camera camera;
+	private Renderer renderer;
+	private Block testBlock;
 
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -181,18 +181,20 @@ public class Main implements Runnable {
 		};
 		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;
-		this.shader.loadProjectionMatrix(MatrixUtils.getProjectionMatrix());
-		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, 0f), 0f, 0f, 0f, 1f));
 		this.shader.loadViewMatrix(this.camera);
-		this.texture = new TextureCubeMap("textures/test_texture.png");
-		this.object = new VaoModel(this.vertices, this.indices, this.textureCords, this.texture, this.shader);
+		TextureCubeMap texture = new TextureCubeMap("textures/test_texture.png");
+		VaoModel blocksVao = new VaoModel(this.vertices, this.indices, this.shader);
+		this.renderer = new Renderer(blocksVao, this.shader);
+		this.testBlock = new Block(new Vector3f(0f, 0f, 0f), texture);
+		this.renderer.addBlockToRender(this.testBlock);
 	}
 	
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		this.object.render();
+		this.renderer.render();
 	}
+	
 	public void update(double deltaTime) {
 		this.camera.update();
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_BACKSPACE)) {
@@ -204,8 +206,8 @@ public class Main implements Runnable {
 	}
 
 	public void cleanUp() {
-		object.cleanUp();
-		shader.cleanUp();
+		renderer.cleanUp();
+		this.shader.cleanUp();
 	}
 	
 	public static void main(String[] args) {
