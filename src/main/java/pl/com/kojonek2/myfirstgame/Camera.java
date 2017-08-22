@@ -9,7 +9,7 @@ import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 
 
 public class Camera {
-	private Vector3f position = new Vector3f(0f, 0f, 5f);
+	private Vector3f position = new Vector3f(0f, 0f, 0f);
 	private float xRotation = 0, yRotation = 0;
 	
 	public Camera() {

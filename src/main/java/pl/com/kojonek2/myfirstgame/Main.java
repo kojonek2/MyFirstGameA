@@ -153,10 +153,10 @@ public class Main implements Runnable {
 	
 	public void glInit() {
 		this.vertices = new float[] {
-				-1f, 1f, 1f,  //0
-				-1f, -1f, 1f, //1
-				1f, -1f, 1f,  //2
-				1f, 1f, 1f,   //3
+				-0.5f, 1f, 0.5f,  //0
+				-0.5f, 0f, 0.5f, //1
+				0.5f, 0f, 0.5f,  //2
+				0.5f, 1f, 0.5f,   //3
 		};
 		this.indices = new int[] {
 				0, 1, 3,
@@ -171,7 +171,7 @@ public class Main implements Runnable {
 		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;
 		this.shader.loadProjectionMatrix(MatrixUtils.getProjectionMatrix());
-		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, -1f), 0f, 0f, 0f, 1f));
+		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, 0f), 0f, 0f, 0f, 1f));
 		this.shader.loadViewMatrix(this.camera);
 		this.texture = new Texture("textures/test.png");
 		this.object = new VaoModel(this.vertices, this.indices, this.textureCords, this.texture, this.shader);
