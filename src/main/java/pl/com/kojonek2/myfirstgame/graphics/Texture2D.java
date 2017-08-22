@@ -11,13 +11,14 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 
 import pl.com.kojonek2.myfirstgame.util.FileUtils;
+import pl.com.kojonek2.myfirstgame.util.PixelUtils;
 
-public class Texture {
+public class Texture2D {
 
 	private int width, height;
 	private int id;
 	
-	public Texture(String path) {
+	public Texture2D(String path) {
 		this.id = this.load(path);
 	}
 	
@@ -34,15 +35,7 @@ public class Texture {
 			return -1;
 		}
 		
-		int[] data = new int[this.width * this.height];
-		for(int i = 0; i < this.width * this.height; i++) {
-			int alpha = (pixels[i] & 0xff000000) >> 24;
-			int red = (pixels[i] & 0xff0000) >> 16;
-			int green = (pixels[i] & 0xff00) >> 8;
-			int blue = (pixels[i] & 0xff);
-			
-			data[i] = alpha << 24 | blue << 16 | green << 8 | red;
-		}
+		int[] data = PixelUtils.convertARGBToRGBA(pixels);
 		
 		int texture = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture);

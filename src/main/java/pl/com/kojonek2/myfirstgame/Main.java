@@ -17,7 +17,7 @@ import org.lwjgl.system.MemoryStack;
 
 import pl.com.kojonek2.myfirstgame.graphics.BasicShader;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
-import pl.com.kojonek2.myfirstgame.graphics.Texture;
+import pl.com.kojonek2.myfirstgame.graphics.Texture2D;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 
@@ -38,7 +38,7 @@ public class Main implements Runnable {
 	
 	private BasicShader shader;
 	private VaoModel object;
-	private Texture texture;
+	private Texture2D texture;
 	private Camera camera;
 
 	public void start() {
@@ -194,7 +194,7 @@ public class Main implements Runnable {
 		this.shader.loadProjectionMatrix(MatrixUtils.getProjectionMatrix());
 		this.shader.loadTransformationMatrix(MatrixUtils.getTransformationMatrix(new Vector3f(0f, 0f, 0f), 0f, 0f, 0f, 1f));
 		this.shader.loadViewMatrix(this.camera);
-		this.texture = new Texture("textures/test.png");
+		this.texture = new Texture2D("textures/test.png");
 		this.object = new VaoModel(this.vertices, this.indices, this.textureCords, this.texture, this.shader);
 	}
 	

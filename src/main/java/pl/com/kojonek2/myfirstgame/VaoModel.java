@@ -14,17 +14,17 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
-import pl.com.kojonek2.myfirstgame.graphics.Texture;
+import pl.com.kojonek2.myfirstgame.graphics.Texture2D;
 
 public class VaoModel {
 	
 	private int vaoID;
 	private List<Integer> vbos = new ArrayList<>();
 	private int numberOfIndices;
-	private Texture texture;
+	private Texture2D texture;
 	private ShaderProgram shader;
 	
-	public VaoModel(float[] vertices, int[] indices, float[] textureCords, Texture texture, ShaderProgram shader) {
+	public VaoModel(float[] vertices, int[] indices, float[] textureCords, Texture2D texture, ShaderProgram shader) {
 		this.texture = texture;
 		this.shader = shader;
 		this.generateVao();
@@ -91,7 +91,7 @@ public class VaoModel {
 		glBindVertexArray(this.vaoID);
 	}
 	
-	public void setTexture(Texture texture) {
+	public void setTexture(Texture2D texture) {
 		this.texture = texture;
 	}
 
