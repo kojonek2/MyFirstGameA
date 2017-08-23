@@ -4,18 +4,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import pl.com.kojonek2.myfirstgame.Camera;
 import pl.com.kojonek2.myfirstgame.VaoModel;
-import pl.com.kojonek2.myfirstgame.blocks.Block;
+import pl.com.kojonek2.myfirstgame.blocks.BlockCube;
 
 public class Renderer {
 
-	private Map<TextureCubeMap, List<Block>> blocks = new HashMap<>();
 	private VaoModel blocksVao;
 	private BasicShader shader;
 	
@@ -24,34 +21,16 @@ public class Renderer {
 		this.shader = shader;
 	}
 	
-	public void addBlockToRender(Block block) {
-		if(this.blocks.containsKey(block.getTexture())) {
-			this.blocks.get(block.getTexture()).add(block);
-			return;
-		}
-		List<Block> list = new ArrayList<Block>();
-		list.add(block);
-		this.blocks.put(block.getTexture(), list);
-	}
-	
-	public void removeBlockFromRender(Block block) {
-		List<Block> list = this.blocks.get(block.getTexture());
-		list.remove(block);
-		if(list.size() <= 0) {
-			this.blocks.remove(block.getTexture());
-		}
-	}
-	
-	public void render() {
+	public void render(Map<TextureCubeMap, List<BlockCube>> blocks) {
 		this.shader.start();
 		this.blocksVao.bindVao();
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
 		
-		for(TextureCubeMap texture : this.blocks.keySet()) {
+		for(TextureCubeMap texture : blocks.keySet()) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP, texture.getID());
 			
-			for(Block block : this.blocks.get(texture)) {
+			for(BlockCube block : blocks.get(texture)) {
 				this.shader.loadTransformationMatrix(block.getTransformationMatrix());
 				glDrawElements(GL_TRIANGLES, this.blocksVao.getNumberOfIndices(), GL_UNSIGNED_INT, 0);
 			}

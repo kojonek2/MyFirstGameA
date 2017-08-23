@@ -15,11 +15,11 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import pl.com.kojonek2.myfirstgame.blocks.Block;
 import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
-import pl.com.kojonek2.myfirstgame.graphics.Textures;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
+import pl.com.kojonek2.myfirstgame.set.Vaos;
+import pl.com.kojonek2.myfirstgame.world.Chunk;
 
 public class Main implements Runnable {
 
@@ -32,13 +32,10 @@ public class Main implements Runnable {
 	private Thread renderingThread;
 	private long window;
 	
-	private float[] vertices;
-	private int[] indices;
-	
 	private Camera camera;
 	private Renderer renderer;
-	private Block testBlock;
-
+	private Chunk chunk;
+	
 	public void start() {
 		this.renderingThread = new Thread(this);
 		this.renderingThread.start();
@@ -153,46 +150,17 @@ public class Main implements Runnable {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		
-		this.vertices = new float[] {
-				-0.5f, 1f, 0.5f,  //0
-				-0.5f, 0f, 0.5f, //1
-				0.5f, 0f, 0.5f,  //2
-				0.5f, 1f, 0.5f,   //3
-				-0.5f, 1f, -0.5f,  //4
-				-0.5f, 0f, -0.5f, //5
-				0.5f, 0f, -0.5f,  //6
-				0.5f, 1f, -0.5f,   //7
-		};
-		this.indices = new int[] {
-				0, 1, 3,
-				3, 1, 2,
-				0, 4, 1,
-				4, 5, 1,
-				3, 6, 7,
-				3, 2, 6,
-				4, 7, 5,
-				7, 6, 5,
-				0, 7, 4,
-				0, 3, 7,
-				1, 5, 6,
-				1, 6, 2
-		};
-		VaoModel blocksVao = new VaoModel(this.vertices, this.indices);
-		this.renderer = new Renderer(blocksVao, ShaderProgram.STANDARD);
+		this.renderer = new Renderer(Vaos.CUBE_VAO, ShaderProgram.STANDARD);
 		this.camera = new Camera();
 		this.renderer.loadViewMatrix(this.camera);
-		for(int x = 0; x < 3; x++) {
-			for(int z = 0; z < 3; z++) {
-				this.testBlock = new Block(new Vector3f(x, 0f, -z), Textures.TEST_TEXTURE);
-				this.renderer.addBlockToRender(this.testBlock);
-			}
-		}
+		this.chunk = new Chunk(0, 0);
+		this.chunk.generateChunk();
 	}
 	
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		this.renderer.render();
+		this.renderer.render(this.chunk.getBlocksToRender());
 	}
 	
 	public void update(double deltaTime) {

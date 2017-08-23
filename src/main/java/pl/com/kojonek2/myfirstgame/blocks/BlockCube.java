@@ -6,12 +6,12 @@ import org.joml.Vector3f;
 import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 
-public class Block {
+public class BlockCube {
 
 	private TextureCubeMap texture;
 	private Vector3f position;
 	
-	public Block(Vector3f position, TextureCubeMap texture) {
+	public BlockCube(Vector3f position, TextureCubeMap texture) {
 		this.texture = texture;
 		this.position = position;
 	}

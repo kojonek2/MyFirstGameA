@@ -1,4 +1,6 @@
-package pl.com.kojonek2.myfirstgame.graphics;
+package pl.com.kojonek2.myfirstgame.set;
+
+import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 
 public class Textures {
 
