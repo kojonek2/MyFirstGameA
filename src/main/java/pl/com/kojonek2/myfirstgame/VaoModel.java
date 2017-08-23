@@ -1,7 +1,6 @@
 package pl.com.kojonek2.myfirstgame;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -13,18 +12,13 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
-import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
-
 public class VaoModel {
 	
 	private int vaoID;
 	private List<Integer> vbos = new ArrayList<>();
 	private int numberOfIndices;
-	private ShaderProgram shader;
 	
-	public VaoModel(float[] vertices, int[] indices, ShaderProgram shader) {
-		this.shader = shader;
+	public VaoModel(float[] vertices, int[] indices) {
 		this.generateVao();
 		this.loadVertices(vertices);
 		this.loadIndices(indices);
@@ -72,10 +66,6 @@ public class VaoModel {
 	
 	public void unBindVao() {
 		glBindVertexArray(this.vaoID);
-	}
-	
-	public void setShader(ShaderProgram shader) {
-		this.shader = shader;
 	}
 	
 	public int getNumberOfIndices() {

@@ -19,7 +19,7 @@ import pl.com.kojonek2.myfirstgame.blocks.Block;
 import pl.com.kojonek2.myfirstgame.graphics.BasicShader;
 import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
-import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
+import pl.com.kojonek2.myfirstgame.graphics.Textures;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 
 public class Main implements Runnable {
@@ -182,11 +182,14 @@ public class Main implements Runnable {
 		this.camera = new Camera();
 		this.shader = ShaderProgram.STANDARD;
 		this.shader.loadViewMatrix(this.camera);
-		TextureCubeMap texture = new TextureCubeMap("textures/test_texture.png");
-		VaoModel blocksVao = new VaoModel(this.vertices, this.indices, this.shader);
+		VaoModel blocksVao = new VaoModel(this.vertices, this.indices);
 		this.renderer = new Renderer(blocksVao, this.shader);
-		this.testBlock = new Block(new Vector3f(0f, 0f, 0f), texture);
-		this.renderer.addBlockToRender(this.testBlock);
+		for(int x = 0; x < 3; x++) {
+			for(int z = 0; z < 3; z++) {
+				this.testBlock = new Block(new Vector3f(x, 0f, -z), Textures.TEST_TEXTURE);
+				this.renderer.addBlockToRender(this.testBlock);
+			}
+		}
 	}
 	
 	public void render() {
