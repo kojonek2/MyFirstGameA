@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pl.com.kojonek2.myfirstgame.Camera;
 import pl.com.kojonek2.myfirstgame.VaoModel;
 import pl.com.kojonek2.myfirstgame.blocks.Block;
 
@@ -46,20 +47,29 @@ public class Renderer {
 		this.blocksVao.bindVao();
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
+		
 		for(TextureCubeMap texture : this.blocks.keySet()) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP, texture.getID());
+			
 			for(Block block : this.blocks.get(texture)) {
 				this.shader.loadTransformationMatrix(block.getTransformationMatrix());
 				glDrawElements(GL_TRIANGLES, this.blocksVao.getNumberOfIndices(), GL_UNSIGNED_INT, 0);
 			}
+			
 			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
+		
 		glDisableVertexAttribArray(0);
 		this.blocksVao.unBindVao();
 		this.shader.stop();
 	}
 	
+	public void loadViewMatrix(Camera camera) {
+		this.shader.loadViewMatrix(camera);
+	}
+	
 	public void cleanUp() {
 		this.blocksVao.cleanUp();
+		this.shader.cleanUp();
 	}
 }

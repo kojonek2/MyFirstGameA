@@ -16,7 +16,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import pl.com.kojonek2.myfirstgame.blocks.Block;
-import pl.com.kojonek2.myfirstgame.graphics.BasicShader;
 import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 import pl.com.kojonek2.myfirstgame.graphics.Textures;
@@ -36,7 +35,6 @@ public class Main implements Runnable {
 	private float[] vertices;
 	private int[] indices;
 	
-	private BasicShader shader;
 	private Camera camera;
 	private Renderer renderer;
 	private Block testBlock;
@@ -179,11 +177,10 @@ public class Main implements Runnable {
 				1, 5, 6,
 				1, 6, 2
 		};
-		this.camera = new Camera();
-		this.shader = ShaderProgram.STANDARD;
-		this.shader.loadViewMatrix(this.camera);
 		VaoModel blocksVao = new VaoModel(this.vertices, this.indices);
-		this.renderer = new Renderer(blocksVao, this.shader);
+		this.renderer = new Renderer(blocksVao, ShaderProgram.STANDARD);
+		this.camera = new Camera();
+		this.renderer.loadViewMatrix(this.camera);
 		for(int x = 0; x < 3; x++) {
 			for(int z = 0; z < 3; z++) {
 				this.testBlock = new Block(new Vector3f(x, 0f, -z), Textures.TEST_TEXTURE);
@@ -205,12 +202,11 @@ public class Main implements Runnable {
 			this.camera.setXRotation(0f);
 			this.camera.setYRotation(0f);
 		}
-		this.shader.loadViewMatrix(this.camera);
+		this.renderer.loadViewMatrix(this.camera);
 	}
 
 	public void cleanUp() {
 		renderer.cleanUp();
-		this.shader.cleanUp();
 	}
 	
 	public static void main(String[] args) {
