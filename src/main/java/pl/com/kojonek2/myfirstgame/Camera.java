@@ -6,6 +6,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
+import pl.com.kojonek2.myfirstgame.input.MouseHandler;
 
 
 public class Camera {
@@ -48,28 +49,26 @@ public class Camera {
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_D)) {
 			this.position.add(this.getForwardVector(270f).mul(0.1f));
 		}
-		if(KeyboardHandler.isKeyDown(GLFW_KEY_UP)) {
-			this.xRotation += 1f;
-			this.clampXRotation();
-		}
-		if(KeyboardHandler.isKeyDown(GLFW_KEY_DOWN)) {
-			this.xRotation += -1f;
-			this.clampXRotation();
-		}
-		if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT)) {
-			this.yRotation += 1f;
-			this.clampYRotation();
-		}
-		if(KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT)) {
-			this.yRotation += -1f;
-			this.clampYRotation();
-		}
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE)) {
-			this.position.add(0f, 0.2f, 0f);
+			this.position.add(new Vector3f(0f, 1f, 0f).mul(0.1f));
 		}
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-			this.position.add(0f, -0.2f, 0f);
+			this.position.add(new Vector3f(0f, -1f, 0f).mul(0.1f));
 		}
+		
+		int yDelta = MouseHandler.getLastMoveX();
+		if(yDelta != 0) {
+			MouseHandler.setLastMoveX(0);
+		}
+		this.yRotation -= ((float) yDelta) * 0.2f;
+		this.clampYRotation();
+		
+		int xDelta = MouseHandler.getLastMoveY();
+		if(xDelta != 0) {
+			MouseHandler.setLastMoveY(0);
+		}
+		this.xRotation += ((float) xDelta) * 0.2f;
+		this.clampXRotation();
 	}
 	
 	public Vector3f getPosition() {

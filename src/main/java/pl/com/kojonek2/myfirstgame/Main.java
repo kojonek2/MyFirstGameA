@@ -9,6 +9,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.IntBuffer;
 
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -18,6 +19,7 @@ import org.lwjgl.system.MemoryStack;
 import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
+import pl.com.kojonek2.myfirstgame.input.MouseHandler;
 import pl.com.kojonek2.myfirstgame.set.Vaos;
 import pl.com.kojonek2.myfirstgame.world.World;
 
@@ -28,6 +30,7 @@ public class Main implements Runnable {
 	private String title = "My first game";
 	
 	private GLFWKeyCallback keyHandler;
+	private GLFWCursorPosCallback mouseHandler;
 
 	private Thread renderingThread;
 	private long window;
@@ -66,7 +69,7 @@ public class Main implements Runnable {
 		
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
+		
 		// Create the window
 		this.window = glfwCreateWindow(Main.width, Main.height, this.title, NULL, NULL);
 		if (this.window == NULL)
@@ -84,6 +87,10 @@ public class Main implements Runnable {
 			glfwSetWindowPos(this.window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		}
 
+
+		//disable cursor
+		glfwSetInputMode(this.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		
 		glfwMakeContextCurrent(this.window);
 		// Disable v-sync
 		glfwSwapInterval(0);
@@ -92,8 +99,10 @@ public class Main implements Runnable {
 		//Callback////////////////////
 		glfwSetFramebufferSizeCallback(this.window, (long windowID, int width, int height) ->  glViewport(0, 0, width, height));
 		
+		this.mouseHandler = new MouseHandler();
+		glfwSetCursorPosCallback(this.window, this.mouseHandler);
+		
 		this.keyHandler = new KeyboardHandler();
-		KeyboardHandler.window = this.window;
 		glfwSetKeyCallback(this.window, this.keyHandler);
 		/////////////////////////////
 	}

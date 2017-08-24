@@ -37,7 +37,6 @@ public class Renderer {
 			
 			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
-		
 		glDisableVertexAttribArray(0);
 		this.blocksVao.unBindVao();
 		this.shader.stop();

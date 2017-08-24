@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -31,7 +32,12 @@ public class Chunk {
 		for(int x = 0; x < 16; x++) {
 			for(int y = 0; y < height; y++) {
 				for(int z = 0; z < 16; z++) {
-					this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE);
+					int random = ThreadLocalRandom.current().nextInt(2);
+					if(random == 0) {
+						this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_0);
+					} else {
+						this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_1);
+					}
 				}
 			}
 		}
