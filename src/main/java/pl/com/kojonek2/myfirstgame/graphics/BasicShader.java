@@ -15,6 +15,8 @@ public class BasicShader extends ShaderProgram {
 	private int transformationMatrixLocation;
 	private int projectionMatrixLocation;
 	private int viewMatrixLocation;
+	
+	private FloatBuffer reusableMatrixBuffer = BufferUtils.createFloatBuffer(16);
 
 	public BasicShader() {
 		super("shaders/shader.vert", "shaders/shader.frag");
@@ -31,25 +33,25 @@ public class BasicShader extends ShaderProgram {
 
 	//** IMPORTANT ENABLE SHADER BEFORE USING IT */
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
-		matrix.get(buffer);
-		glUniformMatrix4fv(this.transformationMatrixLocation, false, buffer);
+		this.reusableMatrixBuffer.clear();
+		matrix.get(this.reusableMatrixBuffer);
+		glUniformMatrix4fv(this.transformationMatrixLocation, false, this.reusableMatrixBuffer);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
 		this.start();
-		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
-		matrix.get(buffer);
-		glUniformMatrix4fv(this.projectionMatrixLocation, false, buffer);
+		this.reusableMatrixBuffer.clear();
+		matrix.get(this.reusableMatrixBuffer);
+		glUniformMatrix4fv(this.projectionMatrixLocation, false, this.reusableMatrixBuffer);
 		this.stop();
 	}
 	
 	public void loadViewMatrix(Camera camera) {
 		this.start();
-		FloatBuffer buffer = (FloatBuffer) BufferUtils.createFloatBuffer(16);
+		this.reusableMatrixBuffer.clear();
 		Matrix4f matrix = camera.getViewMatrix();
-		matrix.get(buffer);
-		glUniformMatrix4fv(this.viewMatrixLocation, false, buffer);
+		matrix.get(this.reusableMatrixBuffer);
+		glUniformMatrix4fv(this.viewMatrixLocation, false, this.reusableMatrixBuffer);
 		this.stop();
 	}
 }

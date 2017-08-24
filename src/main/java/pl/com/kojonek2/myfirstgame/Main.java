@@ -19,7 +19,7 @@ import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.set.Vaos;
-import pl.com.kojonek2.myfirstgame.world.Chunk;
+import pl.com.kojonek2.myfirstgame.world.World;
 
 public class Main implements Runnable {
 
@@ -34,7 +34,7 @@ public class Main implements Runnable {
 	
 	private Camera camera;
 	private Renderer renderer;
-	private Chunk chunk;
+	private World world;
 	
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -153,14 +153,14 @@ public class Main implements Runnable {
 		this.renderer = new Renderer(Vaos.CUBE_VAO, ShaderProgram.STANDARD);
 		this.camera = new Camera();
 		this.renderer.loadViewMatrix(this.camera);
-		this.chunk = new Chunk(0, 0);
-		this.chunk.generateChunk();
+		this.world = new World();
+		this.world.test();
 	}
 	
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		this.renderer.render(this.chunk.getBlocksToRender());
+		this.renderer.render(this.world.getBlocksToRender());
 	}
 	
 	public void update(double deltaTime) {

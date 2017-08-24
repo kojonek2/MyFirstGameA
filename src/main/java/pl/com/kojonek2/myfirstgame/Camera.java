@@ -12,14 +12,16 @@ public class Camera {
 	private Vector3f position = new Vector3f(0f, 0.5f, 1f);
 	private float xRotation = 0, yRotation = 0;
 	
+	private Matrix4f reusableMatrix = new Matrix4f();
+	
 	public Camera() {
 	}
 	
 	public Matrix4f getViewMatrix() {
-		Matrix4f matrix = new Matrix4f().rotation((float) Math.toRadians(-this.xRotation), new Vector3f(1f, 0f, 0f));
-		matrix.rotate((float) Math.toRadians(-this.yRotation), new Vector3f(0f, 1f, 0f));
-		matrix.translate(new Vector3f(-this.position.x, -this.position.y, -this.position.z));
-		return matrix;
+		this.reusableMatrix.rotation((float) Math.toRadians(-this.xRotation), new Vector3f(1f, 0f, 0f));
+		this.reusableMatrix.rotate((float) Math.toRadians(-this.yRotation), new Vector3f(0f, 1f, 0f));
+		this.reusableMatrix.translate(new Vector3f(-this.position.x, -this.position.y, -this.position.z));
+		return this.reusableMatrix;
 	}
 	
 	/** 
