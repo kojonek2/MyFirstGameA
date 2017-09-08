@@ -9,18 +9,18 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.IntBuffer;
 
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import pl.com.kojonek2.myfirstgame.Camera.CameraMode;
 import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.input.MouseHandler;
 import pl.com.kojonek2.myfirstgame.set.Vaos;
+import pl.com.kojonek2.myfirstgame.world.Player;
 import pl.com.kojonek2.myfirstgame.world.World;
 
 public class Main implements Runnable {
@@ -29,8 +29,8 @@ public class Main implements Runnable {
 	public static int width = 1280;
 	private String title = "My first game";
 	
-	private GLFWKeyCallback keyHandler;
-	private GLFWCursorPosCallback mouseHandler;
+	private KeyboardHandler keyHandler;
+	private MouseHandler mouseHandler;
 
 	private Thread renderingThread;
 	private long window;
@@ -38,6 +38,7 @@ public class Main implements Runnable {
 	private Camera camera;
 	private Renderer renderer;
 	private World world;
+	private Player player;
 	
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -160,7 +161,8 @@ public class Main implements Runnable {
 		glCullFace(GL_BACK);
 		
 		this.renderer = new Renderer(Vaos.CUBE_VAO, ShaderProgram.STANDARD);
-		this.camera = new Camera();
+		this.player = new Player(new Vector3f(0f, 4f, 0f));
+		this.camera = new Camera(this.player);
 		this.renderer.loadViewMatrix(this.camera);
 		this.world = new World();
 		this.world.test();
@@ -173,7 +175,15 @@ public class Main implements Runnable {
 	}
 	
 	public void update(double deltaTime) {
+		this.player.update();
 		this.camera.update();
+		this.mouseHandler.update();
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_F)) {
+			this.camera.setMode(CameraMode.FREECAM);
+		}
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_P)) {
+			this.camera.setMode(CameraMode.PLAYERCAM);
+		}
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_BACKSPACE)) {
 			this.camera.setPosition(new Vector3f(0f, 2.8f, 0f));
 			this.camera.setXRotation(0f);

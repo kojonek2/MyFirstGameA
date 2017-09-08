@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
+import pl.com.kojonek2.myfirstgame.blocks.BlockAir;
 import pl.com.kojonek2.myfirstgame.blocks.BlockCube;
 import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 import pl.com.kojonek2.myfirstgame.set.Textures;
@@ -30,13 +31,17 @@ public class Chunk {
 	
 	public void generateChunk(int height) {
 		for(int x = 0; x < 16; x++) {
-			for(int y = 0; y < height; y++) {
+			for(int y = 0; y < 128; y++) {
 				for(int z = 0; z < 16; z++) {
-					int random = ThreadLocalRandom.current().nextInt(2);
-					if(random == 0) {
-						this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_0);
+					if(y < height) {
+						int random = ThreadLocalRandom.current().nextInt(2);
+						if(random == 0) {
+							this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_0);
+						} else {
+							this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_1);
+						}
 					} else {
-						this.blocks[x][y][z] = new BlockCube(new Vector3f(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_1);
+						this.blocks[x][y][z] = new BlockAir(new Vector3f(x + this.position.x, y, z + this.position.z));
 					}
 				}
 			}
@@ -49,7 +54,7 @@ public class Chunk {
 			for(int y = 0; y < 3; y++) {
 				for(int z = 0; z < 16; z++) {
 					BlockCube block = this.blocks[x][y][z];
-					if(block != null) {
+					if(block != null && block.shouldBeRendered()) {
 						if(result.containsKey(block.getTexture())) {
 							result.get(block.getTexture()).add(block);
 						} else {

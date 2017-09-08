@@ -32,4 +32,8 @@ public class BlockCube {
 		return texture;
 	}
 	
+	public boolean shouldBeRendered() {
+		return true;
+	}
+	
 }

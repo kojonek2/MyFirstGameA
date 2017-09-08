@@ -12,12 +12,6 @@ public class MouseHandler extends GLFWCursorPosCallback{
 	private IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
 	private IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
 	
-	private long currentTime;
-	private long lastTestTime = System.nanoTime();
-	private double rate = 1_000_000_000.0 / 60.0;
-	private double deltaTime = 0.0;
-	private double delta = 0.0;
-	
 	private int xDisplacment = 0;
 	private int yDisplacment = 0;
 	
@@ -26,10 +20,6 @@ public class MouseHandler extends GLFWCursorPosCallback{
 	
 	@Override
 	public void invoke(long window, double xpos, double ypos) {
-		this.currentTime = System.nanoTime();
-		this.deltaTime = currentTime - lastTestTime;
-		this.delta += deltaTime / rate;
-		this.lastTestTime = currentTime;
 		
 		this.heightBuffer.clear();
 		this.widthBuffer.clear();
@@ -40,15 +30,15 @@ public class MouseHandler extends GLFWCursorPosCallback{
 		this.xDisplacment += xpos - centerX;
 		this.yDisplacment += centerY - ypos;
 		
-		if(this.delta >= 1) {
-			lastMoveX = this.xDisplacment;
-			lastMoveY = this.yDisplacment;
-			
-			this.xDisplacment = 0;
-			this.yDisplacment = 0;
-			this.delta = 0;
-		}
 		glfwSetCursorPos(window, centerX, centerY);
+	}
+	
+	public void update() {
+		lastMoveX = this.xDisplacment;
+		lastMoveY = this.yDisplacment;
+			
+		this.xDisplacment = 0;
+		this.yDisplacment = 0;
 	}
 
 	public static int getLastMoveX() {
@@ -59,13 +49,4 @@ public class MouseHandler extends GLFWCursorPosCallback{
 		return MouseHandler.lastMoveY;
 	}
 
-	public static void setLastMoveX(int lastMoveX) {
-		MouseHandler.lastMoveX = lastMoveX;
-	}
-
-	public static void setLastMoveY(int lastMoveY) {
-		MouseHandler.lastMoveY = lastMoveY;
-	}
-	
-	
 }
