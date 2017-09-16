@@ -10,7 +10,7 @@ import org.lwjgl.BufferUtils;
 import pl.com.kojonek2.myfirstgame.Camera;
 import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 
-public class BasicShader extends ShaderProgram {
+public class CubeMapShader extends ShaderProgram {
 	
 	private int transformationMatrixLocation;
 	private int projectionMatrixLocation;
@@ -18,8 +18,8 @@ public class BasicShader extends ShaderProgram {
 	
 	private FloatBuffer reusableMatrixBuffer = BufferUtils.createFloatBuffer(16);
 
-	public BasicShader() {
-		super("shaders/shader.vert", "shaders/shader.frag");
+	protected CubeMapShader() {
+		super("shaders/cube_map_shader.vert", "shaders/cube_map_shader.frag");
 		this.transformationMatrixLocation = this.getUnfiormLocation("transformation_matrix");
 		this.projectionMatrixLocation = this.getUnfiormLocation("projection_matrix");
 		this.viewMatrixLocation = this.getUnfiormLocation("view_matrix");

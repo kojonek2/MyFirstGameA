@@ -39,7 +39,14 @@ public class Camera {
 		return this.reusableMatrix;
 	}
 	
+	public CameraMode getMode() {
+		return this.mode;
+	}
+	
 	public void setMode(CameraMode mode) {
+		if(mode == null) {
+			return;
+		}
 		this.mode = mode;
 	}
 	

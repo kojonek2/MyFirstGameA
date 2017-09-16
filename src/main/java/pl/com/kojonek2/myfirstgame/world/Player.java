@@ -2,10 +2,12 @@ package pl.com.kojonek2.myfirstgame.world;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.input.MouseHandler;
+import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 import pl.com.kojonek2.myfirstgame.util.VectorUtils;
 
 public class Player {
@@ -17,7 +19,7 @@ public class Player {
 		this.position = position;
 	}
 	
-	public void update() {
+	public void update(boolean updateRotation) {
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_W)) {
 			this.position.add(VectorUtils.getForwardVector(0f, this.yRotation).mul(0.1f));
 		}
@@ -35,6 +37,10 @@ public class Player {
 		}
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
 			this.position.add(new Vector3f(0f, -1f, 0f).mul(0.1f));
+		}
+		
+		if(!updateRotation) {
+			return;
 		}
 		
 		int yDelta = MouseHandler.getLastMoveX();
@@ -82,5 +88,9 @@ public class Player {
 		} else if (this.yRotation < 0f) {
 			this.yRotation += 360f;
 		}
+	}
+	
+	public Matrix4f getTransformationMatrix() {
+		return MatrixUtils.getTransformationMatrix(this.position, 0f, this.yRotation, 0f, 1f);
 	}
 }

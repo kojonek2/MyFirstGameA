@@ -1,8 +1,14 @@
 package pl.com.kojonek2.myfirstgame.set;
 
 import pl.com.kojonek2.myfirstgame.VaoModel;
+import pl.com.kojonek2.myfirstgame.loaders.ObjLoader;
 
 public class Vaos {
+	
+	static {
+		ObjLoader loader = new ObjLoader("models/steve.obj");
+		PLAYER_VAO = new VaoModel(loader.getVertices(), loader.getIndices(), loader.getTextureCordinates());
+	}
 	
 	private static final float[] cubeVertices = new float[] {
 			-0.5f, 1f, 0.5f,  //0
@@ -30,6 +36,7 @@ public class Vaos {
 	};
 
 	public static final VaoModel CUBE_VAO = new VaoModel(cubeVertices, cubeIndices);
+	public static final VaoModel PLAYER_VAO;
 	
 	private Vaos(){
 	}

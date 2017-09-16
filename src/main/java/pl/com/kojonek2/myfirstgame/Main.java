@@ -7,6 +7,10 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -17,8 +21,10 @@ import org.lwjgl.system.MemoryStack;
 import pl.com.kojonek2.myfirstgame.Camera.CameraMode;
 import pl.com.kojonek2.myfirstgame.graphics.Renderer;
 import pl.com.kojonek2.myfirstgame.graphics.ShaderProgram;
+import pl.com.kojonek2.myfirstgame.graphics.Texture2D;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.input.MouseHandler;
+import pl.com.kojonek2.myfirstgame.set.Textures;
 import pl.com.kojonek2.myfirstgame.set.Vaos;
 import pl.com.kojonek2.myfirstgame.world.Player;
 import pl.com.kojonek2.myfirstgame.world.World;
@@ -39,6 +45,9 @@ public class Main implements Runnable {
 	private Renderer renderer;
 	private World world;
 	private Player player;
+	
+	//test
+	private Map<Texture2D, List<Player>> players = new HashMap<>();
 	
 	public void start() {
 		this.renderingThread = new Thread(this);
@@ -160,22 +169,29 @@ public class Main implements Runnable {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		
-		this.renderer = new Renderer(Vaos.CUBE_VAO, ShaderProgram.STANDARD);
+		this.renderer = new Renderer(Vaos.CUBE_VAO, ShaderProgram.CUBE_MAP, Vaos.PLAYER_VAO, ShaderProgram.TEXTURED_MODEL);
 		this.player = new Player(new Vector3f(0f, 4f, 0f));
 		this.camera = new Camera(this.player);
 		this.renderer.loadViewMatrix(this.camera);
 		this.world = new World();
 		this.world.test();
+		
+		List<Player> list = new ArrayList<>();
+		list.add(this.player);
+		this.players.put(Textures.PLAYER_TEXTURE, list);
 	}
 	
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		this.renderer.render(this.world.getBlocksToRender());
+		this.renderer.renderBlocks(this.world.getBlocksToRender());
+		if(this.camera.getMode() != CameraMode.PLAYERCAM) {
+			this.renderer.renderPlayers(this.players);
+		}
 	}
 	
 	public void update(double deltaTime) {
-		this.player.update();
+		this.player.update(this.camera.getMode() == CameraMode.PLAYERCAM);
 		this.camera.update();
 		this.mouseHandler.update();
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_F)) {

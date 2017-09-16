@@ -25,6 +25,14 @@ public class VaoModel {
 		this.unBindVao();
 	}
 	
+	public VaoModel(float[] vertices, int[] indices, float[] textureCords) {
+		this.generateVao();
+		this.loadVertices(vertices);
+		this.loadIndices(indices);
+		this.loadTextureCords(textureCords);
+		this.unBindVao();
+	}
+	
 	private void generateVao() {
 		this.vaoID = glGenVertexArrays();
 		this.bindVao();
@@ -49,7 +57,6 @@ public class VaoModel {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
 	}
 	
-	@SuppressWarnings("unused")
 	private void loadTextureCords(float[] textureCords) {
 		int vbo = glGenBuffers();
 		this.vbos.add(vbo);

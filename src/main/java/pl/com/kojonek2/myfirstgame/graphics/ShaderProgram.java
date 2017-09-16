@@ -7,7 +7,8 @@ import pl.com.kojonek2.myfirstgame.util.FileUtils;
 
 public abstract class ShaderProgram {
 
-	public static BasicShader STANDARD = new BasicShader();
+	public static CubeMapShader CUBE_MAP = new CubeMapShader();
+	public static TexturedModelShader TEXTURED_MODEL = new TexturedModelShader();
 	
 	protected int programID;
 	protected int vertexID;
