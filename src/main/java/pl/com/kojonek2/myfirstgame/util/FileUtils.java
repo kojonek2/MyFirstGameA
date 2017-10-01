@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import pl.com.kojonek2.myfirstgame.Main;
 
@@ -39,6 +40,12 @@ public class FileUtils {
 	
 	public static File getFile(String path) {
 		ClassLoader classLoader = Main.class.getClassLoader();
-		return new File(classLoader.getResource(path).getFile());
+		try {
+			return new File(classLoader.getResource(path).toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			System.exit(-1);
+			return null;
+		}
 	}
 }
