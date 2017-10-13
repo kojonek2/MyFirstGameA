@@ -37,7 +37,6 @@ public class ObjLoader {
 			OBJModel model = parser.parse(in);
 			
 			List<OBJVertex> verticesTemp = new ArrayList<>();
-			int test = 0;
 			
 			for(OBJObject object : model.getObjects()) {
 				for(OBJMesh mesh : object.getMeshes()) {
@@ -54,7 +53,7 @@ public class ObjLoader {
 							OBJTexCoord textureCords = model.getTexCoord(reference);
 							int indexInList = verticesTemp.indexOf(vertex);
 				
-							if (indexInList != -1 && textureCords.u == this.textureCordinats.get(indexInList * 2) && textureCords.v == this.textureCordinats.get(indexInList * 2 + 1)) {
+							if (indexInList != -1 && textureCords.u == this.textureCordinats.get(indexInList * 2) && (1 - textureCords.v) == this.textureCordinats.get(indexInList * 2 + 1)) {
 								this.indices.add(indexInList);
 							} else {
 								verticesTemp.add(vertex);
@@ -69,8 +68,6 @@ public class ObjLoader {
 					}
 				}
 			}
-			System.out.println("test " + test);
-			System.out.println("test2 " + verticesTemp.size());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
