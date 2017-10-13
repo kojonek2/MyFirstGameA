@@ -63,7 +63,7 @@ public class ObjLoader {
 								this.vertices.add(vertex.z);
 								this.indices.add(verticesTemp.size() - 1);
 								this.textureCordinats.add(textureCords.u);
-								this.textureCordinats.add(textureCords.v);
+								this.textureCordinats.add(1 - textureCords.v);
 							}
 						}
 					}
