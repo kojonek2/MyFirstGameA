@@ -4,7 +4,9 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 
+import pl.com.kojonek2.myfirstgame.blocks.BlockCube;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.input.MouseHandler;
 import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
@@ -12,11 +14,16 @@ import pl.com.kojonek2.myfirstgame.util.VectorUtils;
 
 public class Player {
 	
+	/** y coordinate on feet level  */
 	private Vector3f position;
+	private Vector3f velocity = new Vector3f();
 	private float xRotation = 0, yRotation = 0;
 	
-	public Player(Vector3f position) {
+	private World world;
+	
+	public Player(World world, Vector3f position) {
 		this.position = position;
+		this.world = world;
 	}
 	
 	public void update(boolean updateRotation) {
@@ -39,6 +46,18 @@ public class Player {
 			this.position.add(new Vector3f(0f, -1f, 0f).mul(0.1f));
 		}
 		
+		if(this.isStandingOnGround()) {
+			this.velocity.set(this.velocity.x, 0f, this.velocity.z);
+			this.position.set(this.position.x, (float) Math.floor(this.position.y - 0.001f) + 1f, this.position.z);
+		} else {
+			this.velocity.add(0f, -0.01f, 0f);
+			if(this.velocity.y < -0.03f) {
+				this.velocity.set(this.velocity.x, -0.03f, this.velocity.z);
+			}
+		}
+		
+		this.position.add(this.velocity);
+		
 		if(!updateRotation) {
 			return;
 		}
@@ -50,6 +69,19 @@ public class Player {
 		int xDelta = MouseHandler.getLastMoveY();
 		this.xRotation += ((float) xDelta) * 0.2f;
 		this.clampXRotation();
+	}
+	
+	private boolean isStandingOnGround() {
+		int x = Math.round(this.position.x);
+		int y = (int) (this.position.y - 0.001);
+		int z = Math.round(this.position.z);
+		BlockCube block = this.world.getBlock(new Vector3i(x, y, z));
+		if(block != null && block.isSolid()) {
+			if(block.getPosition().y + 1 >= this.position.y) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public Vector3f getPosition() {
@@ -91,6 +123,6 @@ public class Player {
 	}
 	
 	public Matrix4f getTransformationMatrix() {
-		return MatrixUtils.getTransformationMatrix(this.position, 0f, this.yRotation, 0f, 1f);
+		return MatrixUtils.getTransformationMatrix(new Vector3f(this.position.x, this.position.y, this.position.z), 0f, this.yRotation, 0f, 1f);
 	}
 }

@@ -65,7 +65,7 @@ public class Chunk {
 			for(int y = 0; y < 128; y++) {
 				for(int z = 0; z < 16; z++) {
 					BlockCube block = this.blocks[x][y][z];
-					if(block != null && block.shouldBeRendered() && shouldBlockBeRendered(x, y, z)) {
+					if(block != null && block.shouldBeRendered() && this.shouldBlockBeRendered(x, y, z)) {
 						if(this.blocksToRender.containsKey(block.getTexture())) {
 							this.blocksToRender.get(block.getTexture()).add(block);
 						} else {

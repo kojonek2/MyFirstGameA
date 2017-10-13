@@ -13,4 +13,9 @@ public class BlockAir extends BlockCube {
 		return false;
 	}
 
+	@Override
+	public boolean isSolid() {
+		return false;
+	}
+	
 }

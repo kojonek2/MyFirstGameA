@@ -170,11 +170,11 @@ public class Main implements Runnable {
 		glCullFace(GL_BACK);
 		
 		this.renderer = new Renderer(Vaos.CUBE_VAO, ShaderProgram.CUBE_MAP, Vaos.PLAYER_VAO, ShaderProgram.TEXTURED_MODEL);
-		this.player = new Player(new Vector3f(0f, 4f, 0f));
-		this.camera = new Camera(this.player);
-		this.renderer.loadViewMatrix(this.camera);
 		this.world = new World();
 		this.world.test();
+		this.player = new Player(this.world, new Vector3f(0f, 6f, 0f));
+		this.camera = new Camera(this.player);
+		this.renderer.loadViewMatrix(this.camera);
 		
 		List<Player> list = new ArrayList<>();
 		list.add(this.player);

@@ -31,7 +31,7 @@ public class Camera {
 		} else if(this.mode == CameraMode.PLAYERCAM) {
 			this.reusableMatrix.rotation((float) Math.toRadians(-this.owner.getXRotation()), new Vector3f(1f, 0f, 0f));
 			this.reusableMatrix.rotate((float) Math.toRadians(-this.owner.getYRotation()), new Vector3f(0f, 1f, 0f));
-			this.reusableMatrix.translate(new Vector3f(-this.owner.getPosition().x, -this.owner.getPosition().y, -this.owner.getPosition().z));
+			this.reusableMatrix.translate(new Vector3f(-this.owner.getPosition().x, -this.owner.getPosition().y - 1.8f, -this.owner.getPosition().z));
 		} else {
 			System.err.println("Invalid camera mode!");
 			System.exit(-1);

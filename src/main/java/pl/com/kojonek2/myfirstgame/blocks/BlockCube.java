@@ -36,4 +36,8 @@ public class BlockCube {
 		return true;
 	}
 	
+	public boolean isSolid() {
+		return true;
+	}
+	
 }
