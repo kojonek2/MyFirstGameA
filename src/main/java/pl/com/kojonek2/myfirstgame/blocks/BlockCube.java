@@ -1,7 +1,7 @@
 package pl.com.kojonek2.myfirstgame.blocks;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
@@ -9,9 +9,9 @@ import pl.com.kojonek2.myfirstgame.util.MatrixUtils;
 public class BlockCube {
 
 	private TextureCubeMap texture;
-	private Vector3f position;
+	private Vector3i position;
 	
-	public BlockCube(Vector3f position, TextureCubeMap texture) {
+	public BlockCube(Vector3i position, TextureCubeMap texture) {
 		this.texture = texture;
 		this.position = position;
 	}
@@ -20,11 +20,11 @@ public class BlockCube {
 		return MatrixUtils.getTransformationMatrix(this.position, 0f, 0f, 0f, 1f);
 	}
 	
-	public Vector3f getPosition() {
+	public Vector3i getPosition() {
 		return position;
 	}
 
-	public void setPosition(Vector3f position) {
+	public void setPosition(Vector3i position) {
 		this.position = position;
 	}
 

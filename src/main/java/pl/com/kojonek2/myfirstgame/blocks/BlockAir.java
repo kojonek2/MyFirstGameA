@@ -1,10 +1,10 @@
 package pl.com.kojonek2.myfirstgame.blocks;
 
-import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 public class BlockAir extends BlockCube {
 
-	public BlockAir(Vector3f position) {
+	public BlockAir(Vector3i position) {
 		super(position, null);
 	}
 	
