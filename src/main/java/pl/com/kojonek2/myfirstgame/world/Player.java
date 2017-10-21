@@ -39,9 +39,6 @@ public class Player {
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_D)) {
 			this.position.add(VectorUtils.getForwardVector(270f, this.yRotation).mul(0.1f));
 		}
-		if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE)) {
-			this.position.add(new Vector3f(0f, 1f, 0f).mul(0.1f));
-		}
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
 			this.position.add(new Vector3f(0f, -1f, 0f).mul(0.1f));
 		}
@@ -49,10 +46,13 @@ public class Player {
 		if(this.isStandingOnGround()) {
 			this.velocity.set(this.velocity.x, 0f, this.velocity.z);
 			this.position.set(this.position.x, (float) Math.floor(this.position.y - 0.001f) + 1f, this.position.z);
+			if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE)) {
+				this.velocity.set(this.velocity.x, 0.18f, this.velocity.z);
+			}
 		} else {
 			this.velocity.add(0f, -0.01f, 0f);
-			if(this.velocity.y < -0.03f) {
-				this.velocity.set(this.velocity.x, -0.03f, this.velocity.z);
+			if(this.velocity.y < -0.3f) {
+				this.velocity.set(this.velocity.x, -0.3f, this.velocity.z);
 			}
 		}
 		
@@ -75,6 +75,13 @@ public class Player {
 		int x = Math.round(this.position.x);
 		int y = (int) (this.position.y - 0.001);
 		int z = Math.round(this.position.z);
+		if(y < 0) {
+			System.out.println("TODO kill player");
+			//TODO kill player
+			this.position.set(2f, 10f, 1f);
+			return false; 
+		}
+		
 		BlockCube block = this.world.getBlock(new Vector3i(x, y, z));
 		if(block != null && block.isSolid()) {
 			if(block.getPosition().y + 1 >= this.position.y) {
