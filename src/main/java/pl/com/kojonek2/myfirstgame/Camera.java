@@ -39,6 +39,18 @@ public class Camera {
 		return this.reusableMatrix;
 	}
 	
+	public Vector3f getEyePosisition() {
+		if(this.mode == CameraMode.FREECAM) {
+			return new Vector3f(this.position);
+		} else if(this.mode == CameraMode.PLAYERCAM) {
+			return new Vector3f(this.owner.getPosition()).add(0f, 1.8f, 0f);
+		} else {
+			System.err.println("Invalid camera mode!");
+			System.exit(-1);
+			return null;
+		}
+	}
+	
 	public CameraMode getMode() {
 		return this.mode;
 	}

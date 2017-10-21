@@ -49,7 +49,8 @@ public class ObjLoader {
 						
 						for(OBJDataReference reference : face.getReferences()) {
 							OBJVertex vertex = model.getVertex(reference);
-							OBJNormal normal = model.getNormal(reference);
+							@SuppressWarnings("unused")
+							OBJNormal normal = model.getNormal(reference); //TODO
 							OBJTexCoord textureCords = model.getTexCoord(reference);
 							int indexInList = verticesTemp.indexOf(vertex);
 				
