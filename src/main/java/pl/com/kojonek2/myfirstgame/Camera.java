@@ -5,10 +5,13 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import pl.com.kojonek2.myfirstgame.blocks.BlockCube;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.input.MouseHandler;
 import pl.com.kojonek2.myfirstgame.util.VectorUtils;
 import pl.com.kojonek2.myfirstgame.world.Player;
+import pl.com.kojonek2.myfirstgame.world.RayCast;
+import pl.com.kojonek2.myfirstgame.world.World;
 
 
 public class Camera {
@@ -16,11 +19,13 @@ public class Camera {
 	private float xRotation = 0, yRotation = 0;
 	private CameraMode mode = CameraMode.PLAYERCAM;
 	private Player owner;
+	private World world;
 	
 	private Matrix4f reusableMatrix = new Matrix4f();
 	
-	public Camera(Player player) {
+	public Camera(Player player, World world) {
 		this.owner = player;
+		this.world = world;
 	}
 	
 	public Matrix4f getViewMatrix() {
@@ -63,6 +68,13 @@ public class Camera {
 	}
 	
 	public void update() {
+		BlockCube block = this.world.getBlockPointedByRay(new RayCast(this, 3f));
+		if(block == null) {
+			System.out.println("NO Collision");
+		} else {
+			System.out.println("colision x: +" + block.getPosition().x + " y: " + block.getPosition().y + " z: " + block.getPosition().z);
+		}
+		
 		if(this.mode != CameraMode.FREECAM) {
 			return;
 		}

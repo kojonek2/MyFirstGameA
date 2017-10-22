@@ -75,6 +75,10 @@ public class Player {
 		int x = Math.round(this.position.x);
 		int y = (int) (this.position.y - 0.001);
 		int z = Math.round(this.position.z);
+		
+		if(y > 128) {
+			return false;
+		}
 		if(y < 0) {
 			System.out.println("TODO kill player");
 			//TODO kill player

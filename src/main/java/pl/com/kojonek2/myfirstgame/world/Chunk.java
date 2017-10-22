@@ -52,7 +52,7 @@ public class Chunk {
 	}
 	
 	public BlockCube getBlock(int x, int y, int z) {
-		if(x < 0 && x > 16 && y < 0 && y > 128 && z < 0 && z > 16) {
+		if(x < 0 && x > 16 && y < 0 && y > 127 && z < 0 && z > 16) {
 			System.err.println("requested block with wrong cordinats in chunk x: " + this.position.x + " z: " + this.position.z);
 			System.exit(-1);
 		}

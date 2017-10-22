@@ -10,10 +10,13 @@ public class RayCast {
 
 	private Vector3f startPoint;
 	private Vector3f endPoint;
+	
+	private float length;
 
 	//** Ray casts form the center of the screen */
 	public RayCast(Camera camera, float length) {
 		this.startPoint = camera.getEyePosisition();
+		this.length = length;
 		Vector4f clipCoords = new Vector4f(0f, 0f, -1f, 1f);
 		clipCoords.mul(MatrixUtils.getProjectionMatrix().invert());
 		Vector4f eyeCoords = new Vector4f(clipCoords.x, clipCoords.y, -1f, 0f);
@@ -25,11 +28,15 @@ public class RayCast {
 	}
 
 	public Vector3f getStartPoint() {
-		return startPoint;
+		return this.startPoint;
 	}
 
 	public Vector3f getEndPoint() {
-		return endPoint;
+		return this.endPoint;
+	}
+	
+	public float getLength() {
+		return this.length;
 	}
 	
 }

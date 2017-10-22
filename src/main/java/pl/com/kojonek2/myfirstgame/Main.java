@@ -173,7 +173,7 @@ public class Main implements Runnable {
 		this.world = new World();
 		this.world.test();
 		this.player = new Player(this.world, new Vector3f(0f, 6f, 0f));
-		this.camera = new Camera(this.player);
+		this.camera = new Camera(this.player, this.world);
 		this.renderer.loadViewMatrix(this.camera);
 		
 		List<Player> list = new ArrayList<>();
