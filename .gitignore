@@ -24,6 +24,4 @@ hs_err_pid*
 /target/
 
 # Eclipse
-.classpath
-.project
 .settings/
