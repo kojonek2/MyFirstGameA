@@ -2,62 +2,77 @@ package pl.com.kojonek2.myfirstgame.util;
 
 import org.joml.Vector3f;
 
+import pl.com.kojonek2.myfirstgame.world.RayCast;
+
 public class CollisionUtils {
 
 	private CollisionUtils() {
 	}
 
-	public static boolean isRayAndBoxColliding(Vector3f boxMinCorner, Vector3f boxMaxCorner, Vector3f rayStart,
-			Vector3f rayEnd) {
-		float fractionInsideStart = 0f, fractionInsideEnd = 1f;
+	public static boolean isRayAndBoxColliding(Vector3f boxMinCorner, Vector3f boxMaxCorner, RayCast ray) {
+		//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+		//code from
+		Vector3f rayStart = ray.getStartPoint();
+		Vector3f rayEnd = ray.getEndPoint();
+		Vector3f direction = new Vector3f();
+		rayEnd.sub(rayStart, direction);
+		direction.normalize();
+		
+		float tmin = (boxMinCorner.x - rayStart.x) / direction.x;
+		float tmax = (boxMaxCorner.x - rayStart.x) / direction.x;
 
-		float rayXMin, rayXMax;
-		if (rayStart.x > rayEnd.x) {
-			rayXMin = rayEnd.x;
-			rayXMax = rayStart.x;
-		} else {
-			rayXMin = rayStart.x;
-			rayXMax = rayEnd.x;
+		if (tmin > tmax) {
+			float temp = tmin;
+			tmin = tmax;
+			tmax = temp;
 		}
-		if (rayXMin != rayXMax) {
-			fractionInsideStart = (boxMinCorner.x - rayXMin) / (rayXMax - rayXMin);
-			fractionInsideEnd = (boxMaxCorner.x - rayXMin) / (rayXMax - rayXMin);
-		} else if (rayXMax < boxMinCorner.x || rayXMax > boxMaxCorner.x) {
+
+		float tymin = (boxMinCorner.y - rayStart.y) / direction.y;
+		float tymax = (boxMaxCorner.y - rayStart.y) / direction.y;
+
+		if (tymin > tymax) {
+			float temp = tymin;
+			tymin = tymax;
+			tymax = temp;
+		}
+
+		if ((tmin > tymax) || (tymin > tmax)) {
 			return false;
 		}
 
-		float rayYMin, rayYMax;
-		if (rayStart.y > rayEnd.y) {
-			rayYMin = rayEnd.y;
-			rayYMax = rayStart.y;
-		} else {
-			rayYMin = rayStart.y;
-			rayYMax = rayEnd.y;
-		}
-		if (rayYMin != rayYMax) {
-			fractionInsideStart = Math.max(fractionInsideStart, (boxMinCorner.y - rayYMin) / (rayYMax - rayYMin));
-			fractionInsideEnd = Math.min(fractionInsideEnd, (boxMaxCorner.y - rayYMin) / (rayYMax - rayYMin));
-		} else if (rayYMax < boxMinCorner.y || rayYMax > boxMaxCorner.y) {
-			return false;
+		if (tymin > tmin) {
+			tmin = tymin;
 		}
 
-		float rayZMin, rayZMax;
-		if (rayStart.z > rayEnd.z) {
-			rayZMin = rayEnd.z;
-			rayZMax = rayStart.z;
-		} else {
-			rayZMin = rayStart.z;
-			rayZMax = rayEnd.z;
+		if (tymax < tmax) {
+			tmax = tymax;
 		}
-		if (rayZMin != rayZMax) {
-			fractionInsideStart = Math.max(fractionInsideStart, (boxMinCorner.z - rayZMin) / (rayZMax - rayZMin));
-			fractionInsideEnd = Math.min(fractionInsideEnd, (boxMaxCorner.z - rayZMin) / (rayZMax - rayZMin));
-		} else if (rayZMax < boxMinCorner.z || rayZMax > boxMaxCorner.z) {
+
+		float tzmin = (boxMinCorner.z - rayStart.z) / direction.z;
+		float tzmax = (boxMaxCorner.z - rayStart.z) / direction.z;
+
+		if (tzmin > tzmax) {
+			float temp = tzmin;
+			tzmin = tzmax;
+			tzmax = temp;
+		}
+		
+		if ((tmin > tzmax) || (tzmin > tmax)) {
 			return false;
 		}
-//		System.out.println("fractionInsideStart: " + fractionInsideStart);
-//		System.out.println("fractionInsideEnd: " + fractionInsideEnd);
-		return fractionInsideStart <= fractionInsideEnd;
+		
+		if (tzmin > tmin) {
+			tmin = tzmin;
+		}
+		
+		if (tzmax < tmax) {
+			tmax = tzmax;
+		}
+		
+		if(tmin > ray.getLength()) {
+			return false;
+		}
+		return true;
 	}
 
 }

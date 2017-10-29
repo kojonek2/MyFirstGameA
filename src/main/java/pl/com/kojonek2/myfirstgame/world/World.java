@@ -75,7 +75,7 @@ public class World {
 				for(int zOffset = -length; zOffset <= length; zOffset++) {
 					boxMinCorner.set(center.x + xOffset - 0.5f, center.y + yOffset, center.z + zOffset - 0.5f);
 					boxMaxCorner.set(center.x + xOffset + 0.5f, center.y + yOffset + 1f, center.z + zOffset + 0.5f);
-					boolean isColliding = CollisionUtils.isRayAndBoxColliding(boxMinCorner, boxMaxCorner, ray.getStartPoint(), ray.getEndPoint());
+					boolean isColliding = CollisionUtils.isRayAndBoxColliding(boxMinCorner, boxMaxCorner, ray);
 					if(isColliding) {
 						BlockCube block = this.getBlock(center.x + xOffset, center.y + yOffset, center.z + zOffset);
 						if(block != null && block.isSolid()) {
