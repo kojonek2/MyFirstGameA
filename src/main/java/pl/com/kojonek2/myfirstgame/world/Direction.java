@@ -4,10 +4,10 @@ public enum Direction {
 	
 	UP(0, 1, 0),
 	DOWN(0, -1, 0),
-	LEFT(-1, 0, 0),
-	RIGHT(1, 0, 0),
-	BACK(0, 0, -1),
-	FRONT(0, 0, 1);
+	WEST(-1, 0, 0),
+	EAST(1, 0, 0),
+	NORTH(0, 0, -1),
+	SOUTH(0, 0, 1);
 	
 	
 	private int x, y, z;
@@ -31,6 +31,6 @@ public enum Direction {
 	}
 	
 	public static Direction[] getAll() {
-		return new Direction[]{UP, DOWN, LEFT, RIGHT, BACK, FRONT};
+		return new Direction[]{UP, DOWN, WEST, EAST, NORTH, SOUTH};
 	}
 }

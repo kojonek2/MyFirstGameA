@@ -67,7 +67,7 @@ public class CollisionUtils {
 			tMax = tzMax;
 		}
 		
-		if(tMin > ray.getLength()) {
+		if(tMin > ray.getLength() || tMin < 0) {
 			return new ProbableRayCollision(ray, false, tMin);
 		}
 		

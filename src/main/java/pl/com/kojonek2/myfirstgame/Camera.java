@@ -70,9 +70,10 @@ public class Camera {
 	public void update() {
 		BlockCube block = this.world.getBlockPointedByRay(new RayCast(this, 3f));
 		if(block == null) {
-			System.out.println("NO Collision");
+//			System.out.println("NO Collision");
 		} else {
-			System.out.println("colision x: +" + block.getPosition().x + " y: " + block.getPosition().y + " z: " + block.getPosition().z);
+//			System.out.println("colision x: +" + block.getPosition().x + " y: " + block.getPosition().y + " z: " + block.getPosition().z);
+			this.world.getHitSide(block, new RayCast(this, 3f));
 		}
 		
 		if(this.mode != CameraMode.FREECAM) {

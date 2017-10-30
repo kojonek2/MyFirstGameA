@@ -81,8 +81,7 @@ public class World {
 					if(collision.isColliding()) {
 						BlockCube block = this.getBlock(center.x + xOffset, center.y + yOffset, center.z + zOffset);
 						if(block != null && block.isSolid()) {
-							Vector3i pos = block.getPosition();
-							float dist = rayStart.distanceSquared(pos.x, pos.y, pos.z);
+							float dist = rayStart.distanceSquared(collision.getCollisionPoint());
 							if(dist < record) {
 								record = dist;
 								recordBlock = block;
@@ -95,6 +94,47 @@ public class World {
 			}
 		}
 		return recordBlock;
+	}
+	
+	/** returns null when no side it hit */
+	public Direction getHitSide(BlockCube block, RayCast ray) {
+		Vector3i blockPosition = block.getPosition(); 
+		Vector3f boxMinCorner = new Vector3f(blockPosition.x - 0.5f, blockPosition.y, blockPosition.z - 0.5f);
+		Vector3f boxMaxCorner = new Vector3f(blockPosition.x + 0.5f, blockPosition.y + 1f, blockPosition.z + 0.5f);
+		ProbableRayCollision collision = CollisionUtils.getRayAndBoxCollision(boxMinCorner, boxMaxCorner, ray);
+		
+		if(!collision.isColliding()) {
+			System.err.println("World:getHitSide -- none of the sides are hit");
+			return null;
+		}
+		
+		if(collision.getCollisionPoint().x < blockPosition.x + Direction.WEST.getX() * 0.5 + 0.001f &&
+				collision.getCollisionPoint().x > blockPosition.x + Direction.WEST.getX() * 0.5 - 0.001f) {
+			return Direction.WEST;
+		}
+		if(collision.getCollisionPoint().x < blockPosition.x + Direction.EAST.getX() * 0.5 + 0.001f &&
+				collision.getCollisionPoint().x > blockPosition.x + Direction.EAST.getX() * 0.5 - 0.001f) {
+			return Direction.EAST;
+		}
+		if(collision.getCollisionPoint().z < blockPosition.z + Direction.NORTH.getZ() * 0.5 + 0.001f &&
+				collision.getCollisionPoint().z > blockPosition.z + Direction.NORTH.getZ() * 0.5 - 0.001f) {
+			return Direction.NORTH;
+		}
+		if(collision.getCollisionPoint().z < blockPosition.z + Direction.SOUTH.getZ() * 0.5 + 0.001f &&
+				collision.getCollisionPoint().z > blockPosition.z + Direction.SOUTH.getZ() * 0.5 - 0.001f) {
+			return Direction.SOUTH;
+		}
+		if(collision.getCollisionPoint().y < blockPosition.y + Direction.UP.getY() + 0.001f &&
+				collision.getCollisionPoint().y > blockPosition.y + Direction.UP.getY() - 0.001f) {
+			return Direction.UP;
+		}
+		if(collision.getCollisionPoint().y < blockPosition.y + 0.001f &&
+				collision.getCollisionPoint().y > blockPosition.y - 0.001f) {
+			return Direction.DOWN;
+		}
+		System.err.println("World:getHitSide -- none of the sides are hit");
+		System.exit(-1);
+		return null;
 	}
 	
 	public void test() {
