@@ -39,9 +39,9 @@ public class Chunk {
 					if(y < height) {
 						int random = ThreadLocalRandom.current().nextInt(2);
 						if(random == 0) {
-							this.blocks[x][y][z] = new BlockCube(new Vector3i(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_0);
+							this.blocks[x][y][z] = new BlockCube(new Vector3i(x + this.position.x, y, z + this.position.z), Textures.DIRT);
 						} else {
-							this.blocks[x][y][z] = new BlockCube(new Vector3i(x + this.position.x, y, z + this.position.z), Textures.TEST_TEXTURE_1);
+							this.blocks[x][y][z] = new BlockCube(new Vector3i(x + this.position.x, y, z + this.position.z), Textures.COBBLESTONE);
 						}
 					} else {
 						this.blocks[x][y][z] = new BlockAir(new Vector3i(x + this.position.x, y, z + this.position.z));
