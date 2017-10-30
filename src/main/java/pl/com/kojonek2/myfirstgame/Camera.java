@@ -6,11 +6,11 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import pl.com.kojonek2.myfirstgame.blocks.BlockCube;
+import pl.com.kojonek2.myfirstgame.collision.RayCast;
 import pl.com.kojonek2.myfirstgame.input.KeyboardHandler;
 import pl.com.kojonek2.myfirstgame.input.MouseHandler;
 import pl.com.kojonek2.myfirstgame.util.VectorUtils;
 import pl.com.kojonek2.myfirstgame.world.Player;
-import pl.com.kojonek2.myfirstgame.world.RayCast;
 import pl.com.kojonek2.myfirstgame.world.World;
 
 

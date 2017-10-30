@@ -2,77 +2,76 @@ package pl.com.kojonek2.myfirstgame.util;
 
 import org.joml.Vector3f;
 
-import pl.com.kojonek2.myfirstgame.world.RayCast;
+import pl.com.kojonek2.myfirstgame.collision.RayCast;
+import pl.com.kojonek2.myfirstgame.collision.ProbableRayCollision;
 
 public class CollisionUtils {
 
 	private CollisionUtils() {
 	}
 
-	public static boolean isRayAndBoxColliding(Vector3f boxMinCorner, Vector3f boxMaxCorner, RayCast ray) {
+	public static ProbableRayCollision getRayAndBoxCollision(Vector3f boxMinCorner, Vector3f boxMaxCorner, RayCast ray) {
 		//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 		//code from
 		Vector3f rayStart = ray.getStartPoint();
-		Vector3f rayEnd = ray.getEndPoint();
-		Vector3f direction = new Vector3f();
-		rayEnd.sub(rayStart, direction);
-		direction.normalize();
+		Vector3f direction = ray.getDirection();
 		
-		float tmin = (boxMinCorner.x - rayStart.x) / direction.x;
-		float tmax = (boxMaxCorner.x - rayStart.x) / direction.x;
+		float tMin = (boxMinCorner.x - rayStart.x) / direction.x;
+		float tMax = (boxMaxCorner.x - rayStart.x) / direction.x;
 
-		if (tmin > tmax) {
-			float temp = tmin;
-			tmin = tmax;
-			tmax = temp;
+		if (tMin > tMax) {
+			float temp = tMin;
+			tMin = tMax;
+			tMax = temp;
 		}
 
-		float tymin = (boxMinCorner.y - rayStart.y) / direction.y;
-		float tymax = (boxMaxCorner.y - rayStart.y) / direction.y;
+		float tyMin = (boxMinCorner.y - rayStart.y) / direction.y;
+		float tyMax = (boxMaxCorner.y - rayStart.y) / direction.y;
 
-		if (tymin > tymax) {
-			float temp = tymin;
-			tymin = tymax;
-			tymax = temp;
+		if (tyMin > tyMax) {
+			float temp = tyMin;
+			tyMin = tyMax;
+			tyMax = temp;
 		}
 
-		if ((tmin > tymax) || (tymin > tmax)) {
-			return false;
+		if ((tMin > tyMax) || (tyMin > tMax)) {
+			return new ProbableRayCollision(ray, false, tMin);
 		}
 
-		if (tymin > tmin) {
-			tmin = tymin;
+		if (tyMin > tMin) {
+			tMin = tyMin;
 		}
 
-		if (tymax < tmax) {
-			tmax = tymax;
+		if (tyMax < tMax) {
+			tMax = tyMax;
 		}
 
-		float tzmin = (boxMinCorner.z - rayStart.z) / direction.z;
-		float tzmax = (boxMaxCorner.z - rayStart.z) / direction.z;
+		float tzMin = (boxMinCorner.z - rayStart.z) / direction.z;
+		float tzMax = (boxMaxCorner.z - rayStart.z) / direction.z;
 
-		if (tzmin > tzmax) {
-			float temp = tzmin;
-			tzmin = tzmax;
-			tzmax = temp;
+		if (tzMin > tzMax) {
+			float temp = tzMin;
+			tzMin = tzMax;
+			tzMax = temp;
 		}
 		
-		if ((tmin > tzmax) || (tzmin > tmax)) {
-			return false;
+		if ((tMin > tzMax) || (tzMin > tMax)) {
+			return new ProbableRayCollision(ray, false, tMin);
 		}
 		
-		if (tzmin > tmin) {
-			tmin = tzmin;
+		if (tzMin > tMin) {
+			tMin = tzMin;
 		}
 		
-		if (tzmax < tmax) {
-			tmax = tzmax;
+		if (tzMax < tMax) {
+			tMax = tzMax;
 		}
 		
-		if(tmin > ray.getLength()) {
-			return false;
+		if(tMin > ray.getLength()) {
+			return new ProbableRayCollision(ray, false, tMin);
 		}
-		return true;
+		
+		return new ProbableRayCollision(ray, true, tMin);
 	}
 
 }

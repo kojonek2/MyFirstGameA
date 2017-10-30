@@ -8,6 +8,8 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import pl.com.kojonek2.myfirstgame.blocks.BlockCube;
+import pl.com.kojonek2.myfirstgame.collision.RayCast;
+import pl.com.kojonek2.myfirstgame.collision.ProbableRayCollision;
 import pl.com.kojonek2.myfirstgame.graphics.TextureCubeMap;
 import pl.com.kojonek2.myfirstgame.util.CollisionUtils;
 import pl.com.kojonek2.myfirstgame.util.MapUtils;
@@ -75,8 +77,8 @@ public class World {
 				for(int zOffset = -length; zOffset <= length; zOffset++) {
 					boxMinCorner.set(center.x + xOffset - 0.5f, center.y + yOffset, center.z + zOffset - 0.5f);
 					boxMaxCorner.set(center.x + xOffset + 0.5f, center.y + yOffset + 1f, center.z + zOffset + 0.5f);
-					boolean isColliding = CollisionUtils.isRayAndBoxColliding(boxMinCorner, boxMaxCorner, ray);
-					if(isColliding) {
+					ProbableRayCollision collision = CollisionUtils.getRayAndBoxCollision(boxMinCorner, boxMaxCorner, ray);
+					if(collision.isColliding()) {
 						BlockCube block = this.getBlock(center.x + xOffset, center.y + yOffset, center.z + zOffset);
 						if(block != null && block.isSolid()) {
 							Vector3i pos = block.getPosition();
@@ -92,7 +94,6 @@ public class World {
 				}
 			}
 		}
-		//TODO when moving camera it works bad
 		return recordBlock;
 	}
 	

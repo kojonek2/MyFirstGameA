@@ -1,4 +1,4 @@
-package pl.com.kojonek2.myfirstgame.world;
+package pl.com.kojonek2.myfirstgame.collision;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -10,6 +10,7 @@ public class RayCast {
 
 	private Vector3f startPoint;
 	private Vector3f endPoint;
+	private Vector3f direction;
 	
 	private float length;
 
@@ -17,6 +18,7 @@ public class RayCast {
 	public RayCast(Camera camera, float length) {
 		this.startPoint = camera.getEyePosisition();
 		this.length = length;
+		
 		Vector4f clipCoords = new Vector4f(0f, 0f, -1f, 1f);
 		clipCoords.mul(MatrixUtils.getProjectionMatrix().invert());
 		Vector4f eyeCoords = new Vector4f(clipCoords.x, clipCoords.y, -1f, 0f);
@@ -25,6 +27,10 @@ public class RayCast {
 		ray.normalize().mul(length);
 		endPoint = new Vector3f();
 		startPoint.add(ray, endPoint);
+		
+		this.direction = new Vector3f();
+		endPoint.sub(startPoint, direction);
+		direction.normalize();
 	}
 
 	public Vector3f getStartPoint() {
@@ -33,6 +39,10 @@ public class RayCast {
 
 	public Vector3f getEndPoint() {
 		return this.endPoint;
+	}
+	
+	public Vector3f getDirection() {
+		return this.direction;
 	}
 	
 	public float getLength() {
